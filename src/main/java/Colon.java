@@ -2,15 +2,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Colon {
-    private String nom;
-    private int id;
+    private char nom;
     private List<Ressource> preferencesRessource;
     private List<Colon> pasAmis;
     private Ressource ressource;
     private int posRessource;
     private boolean attribue;
 
-    public Colon(String nom, int id) {
+    public Colon(char nom) {
         this.nom = nom;
         this.preferencesRessource = new ArrayList<>();
         this.pasAmis = new ArrayList<>();
@@ -18,25 +17,22 @@ public class Colon {
         this.posRessource = -1;
         this.attribue = false;
     }
-    public Colon(String nom, int id, List<Colon> pasAmis) {
+    public Colon(char nom, List<Colon> pasAmis) {
         this.nom = nom;
-        this.id = id;
         this.preferencesRessource = new ArrayList<>();
         this.pasAmis = new ArrayList<>();
         this.ressource = null;
         this.posRessource = -1;
         this.attribue = false;
     }
-    public Colon(String nom, int id, List<Ressource> preferencesRessource, List<Colon> pasAmis) {
+    public Colon(char nom, List<Ressource> preferencesRessource, List<Colon> pasAmis) {
         this.nom = nom;
-        this.id = id;
         this.preferencesRessource = preferencesRessource;
         this.pasAmis = pasAmis;
         this.ressource = null;
         this.posRessource = -1;
         this.attribue = false;
     }
-
 
     public boolean ressourceDejaUtilise(List<Colon> colons){
         for(int i=0;i<colons.size();i++){
@@ -49,26 +45,12 @@ public class Colon {
         return false;
     }
 
-
-
-    public String getNom() {
+    public char getNom() {
         return nom;
     }
-    public void setNom(String nom) {
+    public void setNom(char nom) {
         this.nom = nom;
     }
-
-
-
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
-
 
     public List<Ressource> getPreferencesRessource() {
         return preferencesRessource;
@@ -89,26 +71,21 @@ public class Colon {
         return preferencesRessource.get(i);
     }
 
-
-
-
     public List<Colon> getPasAmis() {
-
         return pasAmis;
     }
-    public void setPasAmis(List<Colon> pasAmis) {
 
+    public void setPasAmis(List<Colon> pasAmis) {
         this.pasAmis = pasAmis;
     }
-    public void addPasAmis(Colon colon) {
 
+    public void addPasAmis(Colon colon) {
         this.pasAmis.add(colon);
     }
-    public void removePasAmis(Colon colon) {
 
+    public void removePasAmis(Colon colon) {
         this.pasAmis.remove(colon);
     }
-
 
     public Ressource getRessource() {
         return ressource;
@@ -117,7 +94,6 @@ public class Colon {
         this.ressource = ressource;
     }
 
-
     public int getPosRessource() {
         return posRessource;
     }
@@ -125,14 +101,10 @@ public class Colon {
         this.posRessource = posRessource;
     }
 
-
-
-
     public boolean isAttribue() {
         return attribue;
     }
     public void setAttribue(boolean attribue) {
         this.attribue = attribue;
     }
-
 }

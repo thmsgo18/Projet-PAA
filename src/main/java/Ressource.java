@@ -1,14 +1,15 @@
 public class Ressource{
-    private String nomRessource;
+    private int nomRessource;
     private boolean disponible;
-    public Ressource(String nomRessource){
+
+    public Ressource(int nomRessource){
         this.nomRessource = nomRessource;
         this.disponible = true;
     }
-    public String getNomRessource(){
+    public int getNomRessource(){
         return nomRessource;
     }
-    public void setNomRessource(String nomRessource){
+    public void setNomRessource(int nomRessource){
         this.nomRessource = nomRessource;
     }
     public boolean getDisponibilite(){
@@ -19,6 +20,6 @@ public class Ressource{
     }
 
     public boolean equals(Ressource ressource){
-        return this.nomRessource.equals(ressource.getNomRessource());
+        return this.nomRessource == ressource.getNomRessource();
     }
 }
