@@ -7,9 +7,6 @@ public class Main {
         String nom = sc.nextLine();
         Colonie colonie = new Colonie(nom);
         colonie.menu1();
-        System.out.println("Commençons la répartition des ressources entre colons !");
-        colonie.partageRessources();
-        colonie.menu2();
 
     }
 }

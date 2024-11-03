@@ -96,7 +96,12 @@ public class Colon {
     }
 
     public int getPosRessource() {
-        return posRessource;
+        for(int i =0;i<preferencesRessource.size();i++){
+            if(preferencesRessource.get(i).equals(ressource)) {
+                return i;
+            }
+        }
+        return 0;
     }
     public void setPosRessource(int posRessource) {
         this.posRessource = posRessource;
