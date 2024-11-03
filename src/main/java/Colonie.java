@@ -218,34 +218,6 @@ public class Colonie {
         }
         System.out.println();
     }
-    public void echangeRessource(){
-        System.out.println("Bienvenue dans l'echange de ressource entre 2 colons !");
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Entrez le nom du premier colon : ");
-        char prenomColon1 = sc.nextLine().charAt(0);
-        System.out.println("Entrez le nom du deuxieme colon : ");
-        char prenomColon2 = sc.nextLine().charAt(0);
-        Ressource perm1 = new Ressource(0);
-        Ressource perm2 = new Ressource(0);
-        for(Colon c : colons) {
-            if(c.getNom() == prenomColon1){
-                perm1 = c.getRessource();
-            }
-            if(c.getNom() == prenomColon2){
-                perm2 = c.getRessource();
-            }
-        }
-
-        for(Colon c : colons){
-            if(c.getNom() == prenomColon1){
-                c.setRessource(perm2);
-            }
-            if(c.getNom() == prenomColon2){
-                c.setRessource(perm1);
-            }
-        }
-
-    }
 
     public void menu1() {
         int choix = -1;
@@ -258,7 +230,7 @@ public class Colonie {
             choix = sc.nextInt();
             if(choix<1 || choix>3) {
                 while(choix<1 || choix>3) {
-                    System.out.println("Que voulez-vous faire : ");
+                    System.out.println("Le nombre que vous avez tapez est invalide !\nQue voulez-vous faire ? : ");
                     System.out.println("1 : Ajouter une relation 'ne s'aiment pas' entre deux colons ");
                     System.out.println("2 : Ajouter une liste de préférences à un colon ");
                     System.out.println("3 : Fin ");
@@ -285,10 +257,8 @@ public class Colonie {
                     System.out.println("Fin du programme ! ");
             }
         }
-
-
-
     }
+
     public void menu2(){
         System.out.println("Bienvenue au menue 2 que voulez faire ?");
         Scanner sc = new Scanner(System.in);
@@ -323,5 +293,62 @@ public class Colonie {
             }
 
         }
+    }
+
+    public void echangeRessource(){
+        System.out.println("Bienvenue dans l'echange de ressource entre 2 colons !");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Entrez le nom du premier colon : ");
+        char prenomColon1 = sc.nextLine().charAt(0);
+        System.out.println("Entrez le nom du deuxieme colon : ");
+        char prenomColon2 = sc.nextLine().charAt(0);
+        Ressource perm1 = new Ressource(0);
+        Ressource perm2 = new Ressource(0);
+        for(Colon c : colons) {
+            if(c.getNom() == prenomColon1){
+                perm1 = c.getRessource();
+            }
+            if(c.getNom() == prenomColon2){
+                perm2 = c.getRessource();
+            }
+        }
+
+        for(Colon c : colons){
+            if(c.getNom() == prenomColon1){
+                c.setRessource(perm2);
+            }
+            if(c.getNom() == prenomColon2){
+                c.setRessource(perm1);
+            }
+        }
+
+    }
+
+    public void calculAffectation(){
+        for(Colon c  : colons) {
+            int jaloux = 0;
+            for(Colon c1 : c.getPasAmis()){
+                for(int i= 0; i<c.getPosRessource();i++){
+                    if(c1.getRessource().equals(c.getPreferencesRessource().get(i))){
+                        jaloux++;
+                    }
+                }
+                if(jaloux>0){
+                    this.affectation++;
+                }
+            }
+        }
+        return;
+    }
+
+    public void afficherJaloux(){
+        System.out.println("Bienvenue dans le menu de l'affichage des jaloux !\n");
+        calculAffectation();
+        System.out.println("Le nombre de colon jaloux dans la colonie est de "+affectation+"\n");
+        System.out.println("Voici un récapitulatif du partage de ressource dans la colonie : \n");
+        for(Colon c : colons){
+            System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource()+"\n");
+        }
+        return;
     }
 }
