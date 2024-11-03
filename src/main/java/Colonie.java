@@ -15,6 +15,8 @@ public class Colonie {
         this.ressourcesColonie = new ArrayList<Ressource>(26);
         this.colons = new ArrayList<Colon>(26);
         this.sc = new Scanner(System.in);
+        this.affectation = 0;
+        init();
     }
 
     public void partageRessources(){
@@ -48,11 +50,13 @@ public class Colonie {
     }
 
     public void calculeJaloux(){
+        int res = 0;
         for(int i=0; i<colons.size(); i++){
             if(this.Jaloux(colons.get(i))){
-                this.affectation++;
+                res++;
             }
         }
+        this.affectation = res;
     }
 
     public int getPositionRessource(Ressource ressource){
@@ -262,7 +266,6 @@ public class Colonie {
 
     public void menu2(){
         System.out.println("Bienvenue au menue 2 que voulez faire ?");
-        Scanner sc = new Scanner(System.in);
         int choix = 0;
         while(choix!=3){
             System.out.println("1 : echanger les ressources de 2 colons ");
@@ -285,7 +288,7 @@ public class Colonie {
                     break;
 
                 case 2 :
-                    //AfficheJaloux();
+                    afficherJaloux();
                     break;
 
                 case 3 :
@@ -325,26 +328,27 @@ public class Colonie {
 
     }
 
-    public void calculAffectation(){
+   public void calculAffectation(){
+        int res = 0;
         for(Colon c  : colons) {
             int jaloux = 0;
             for(Colon c1 : c.getPasAmis()){
-                for(int i= 0; i<c.getPosRessource();i++){
-                    if(c1.getRessource().equals(c.getPreferencesRessource().get(i))){
+                for(int i= 0; i<c.getPosRessource();i++) {
+                    if (c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
                         jaloux++;
                     }
                 }
-                if(jaloux>0){
-                    this.affectation++;
-                }
+            }
+            if(jaloux>0){
+                res++;
             }
         }
-        return;
+        this.affectation = res;
     }
 
     public void afficherJaloux(){
         System.out.println("Bienvenue dans le menu de l'affichage des jaloux !\n");
-        calculAffectation();
+        calculeJaloux();
         System.out.println("Le nombre de colon jaloux dans la colonie est de "+affectation+"\n");
         System.out.println("Voici un récapitulatif du partage de ressource dans la colonie : \n");
         for(Colon c : colons){
