@@ -133,13 +133,14 @@ public class Colonie {
         for(Colon colon : colons) {
             System.out.print(colon.getNom() + " : ");
             for(int i=0; i<colon.getPasAmis().size(); i++) {
-                System.out.print(colon.getPasAmis().get(i).getNom());
+                System.out.print(colon.getPasAmis().get(i).getNom()+" ");
             }
             System.out.println();
         }
     }
 
     public void ajoutListePref() {
+        sc.nextLine();
         System.out.println("Entrez le nom du colon");
         char nom = sc.nextLine().charAt(0);
         System.out.println("Entrez les nom des ressources et espacé entre eux : ");
