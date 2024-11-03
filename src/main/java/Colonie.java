@@ -25,11 +25,32 @@ public class Colonie {
                 if(this.ressourcesColonie.get(pos).getDisponibilite()){
                     colons.get(i).setRessource(this.ressourcesColonie.get(pos));
                     this.ressourcesColonie.get(pos).setDisponibilite(false);
+                    this.ressourcesColonie.get(pos).setProrio(colons.get(i));
                     colons.get(i).setAttribue(true);
                     colons.get(i).setPosRessource(j);
                 }else{
                     j++;
                 }
+            }
+        }
+    }
+
+    public boolean Jaloux(Colon colon){
+        for(int i=0; i<colon.getPosRessource(); i++){
+            Ressource res = this.ressourcesColonie.get(this.getPositionRessource(colon.getUnePreferenceRessource(i)));
+            for(int j=0; j<colon.getPasAmis().size(); j++){
+                if (colon.getPasAmis().get(j).equals(res.getProrio())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void calculeJaloux(){
+        for(int i=0; i<colons.size(); i++){
+            if(this.Jaloux(colons.get(i))){
+                this.affectation++;
             }
         }
     }
@@ -197,6 +218,34 @@ public class Colonie {
         }
         System.out.println();
     }
+    public void echangeRessource(){
+        System.out.println("Bienvenue dans l'echange de ressource entre 2 colons !");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Entrez le nom du premier colon : ");
+        char prenomColon1 = sc.nextLine().charAt(0);
+        System.out.println("Entrez le nom du deuxieme colon : ");
+        char prenomColon2 = sc.nextLine().charAt(0);
+        Ressource perm1 = new Ressource(0);
+        Ressource perm2 = new Ressource(0);
+        for(Colon c : colons) {
+            if(c.getNom() == prenomColon1){
+                perm1 = c.getRessource();
+            }
+            if(c.getNom() == prenomColon2){
+                perm2 = c.getRessource();
+            }
+        }
+
+        for(Colon c : colons){
+            if(c.getNom() == prenomColon1){
+                c.setRessource(perm2);
+            }
+            if(c.getNom() == prenomColon2){
+                c.setRessource(perm1);
+            }
+        }
+
+    }
 
     public void menu1() {
         int choix = -1;
@@ -239,5 +288,40 @@ public class Colonie {
 
 
 
+    }
+    public void menu2(){
+        System.out.println("Bienvenue au menue 2 que voulez faire ?");
+        Scanner sc = new Scanner(System.in);
+        int choix = 0;
+        while(choix!=3){
+            System.out.println("1 : echanger les ressources de 2 colons ");
+            System.out.println("2 : Afficher le nombre de jaloux ");
+            System.out.println("3 : Fin ");
+            choix = sc.nextInt();
+            if(choix<1 || choix>3) {
+                while(choix<1 || choix>3) {
+                    System.out.println("Le nombre que vous avez tapez est invalide !\nQue voulez-vous faire ? : ");
+                    System.out.println("1 : Echanger les ressources de 2 colons ");
+                    System.out.println("2 : Afficher le nombre de jaloux ");
+                    System.out.println("3 : Fin ");
+                    choix = sc.nextInt();
+                }
+            }
+
+            switch(choix) {
+                case 1 :
+                    echangeRessource();
+                    break;
+
+                case 2 :
+                    //AfficheJaloux();
+                    break;
+
+                case 3 :
+                    System.out.println("Fin du programme ! ");
+                    return;
+            }
+
+        }
     }
 }

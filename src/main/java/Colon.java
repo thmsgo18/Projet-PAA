@@ -45,6 +45,7 @@ public class Colon {
         return false;
     }
 
+
     public char getNom() {
         return nom;
     }
@@ -106,5 +107,9 @@ public class Colon {
     }
     public void setAttribue(boolean attribue) {
         this.attribue = attribue;
+    }
+
+    public boolean equals(Colon colon) {
+        return this.nom == colon.getNom();
     }
 }

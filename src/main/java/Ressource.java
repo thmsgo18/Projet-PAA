@@ -1,6 +1,7 @@
 public class Ressource{
     private int nomRessource;
     private boolean disponible;
+    private Colon prorio;
 
     public Ressource(int nomRessource){
         this.nomRessource = nomRessource;
@@ -17,6 +18,13 @@ public class Ressource{
     }
     public void setDisponibilite(boolean disponible){
         this.disponible = disponible;
+    }
+
+    public Colon getProrio(){
+        return prorio;
+    }
+    public void setProrio(Colon prorio){
+        this.prorio = prorio;
     }
 
     public boolean equals(Ressource ressource){
