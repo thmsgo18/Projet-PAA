@@ -75,15 +75,12 @@ public class Colon {
     public List<Colon> getPasAmis() {
         return pasAmis;
     }
-
     public void setPasAmis(List<Colon> pasAmis) {
         this.pasAmis = pasAmis;
     }
-
     public void addPasAmis(Colon colon) {
         this.pasAmis.add(colon);
     }
-
     public void removePasAmis(Colon colon) {
         this.pasAmis.remove(colon);
     }
@@ -98,7 +95,7 @@ public class Colon {
     }
 
     public Ressource getRessource() {
-        return ressource;
+        return this.ressource;
     }
     public void setRessource(Ressource ressource) {
         this.ressource = ressource;

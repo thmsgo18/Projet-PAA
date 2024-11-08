@@ -1,14 +1,12 @@
 import java.util.*;
 
-
-
 public class Colonie {
     private String nom;
     private List<Ressource> ressourcesColonie;
     private List<Colon> colons;
     private int affectation;
     private final Scanner sc;
-    private static int nbrMaxColons;
+    private final int nbrMaxColons;
 
     public Colonie(String nom) {
         this.nom = nom;
@@ -21,9 +19,10 @@ public class Colonie {
     }
 
     public void init() throws InputMismatchException{
+        // Initialisation de la colonie
         System.out.println("Entrez le nombre de colons dans la colonie " + this.nom);
         Integer n = sc.nextInt();
-        if(n instanceof Integer && n<=this.nbrMaxColons){
+        if(n instanceof Integer && n<=this.nbrMaxColons && n>=0){
             char nomColon = 'A';
             // Création des colons et des ressources
             for (int i = 0; i < n; i++) {
@@ -43,8 +42,7 @@ public class Colonie {
         for(Colon colon : colons) {
             System.out.print(colon.getNom() + " ");
         }
-        System.out.println();
-        System.out.println("Liste des ressources de la colonie : ");
+        System.out.println("\nListe des ressources de la colonie : ");
         for(Ressource ressource : ressourcesColonie) {
             System.out.print(ressource.getNomRessource() + " ");
         }
@@ -61,16 +59,6 @@ public class Colonie {
             System.out.println("3 : Fin ");
             try {
                 choix = sc.nextInt();
-                if (choix < 1 || choix > 3) {
-                    while (choix < 1 || choix > 3) {
-                        System.out.println("Le nombre que vous avez tapé est invalide !\nQue voulez-vous faire ? : ");
-                        System.out.println("1 : Ajouter une relation 'ne s'aiment pas' entre deux colons ");
-                        System.out.println("2 : Ajouter une liste de préférences à un colon ");
-                        System.out.println("3 : Fin ");
-                        choix = sc.nextInt();
-                    }
-                }
-
                 switch (choix) {
                     case 1:
                         ajoutRelation();
@@ -87,13 +75,14 @@ public class Colonie {
                             partageRessources();
                             menu2();
                         }
-                        System.out.println("Fin du programme ! ");
                         break;
 
-
+                    default:
+                        System.out.println("Le nombre est incorect !");
+                        break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Le nombre est incorect !");
+                System.out.println("La valeure entrée n'est pas un entier !");
                 sc.next();
             }
         }
@@ -101,36 +90,37 @@ public class Colonie {
 
     public void menu2(){
         System.out.println("Bienvenue au menu 2 que voulez-vous faire ?");
+        System.out.println("Récapitulatif des Colons et de leur Ressource:");
         afficherObjets();
-        int choix = 0;
+        int choix = -1;
         while(choix!=3){
             System.out.println("1 : Echanger les ressources de 2 colons ");
             System.out.println("2 : Afficher le nombre de jaloux ");
             System.out.println("3 : Fin ");
-            choix = sc.nextInt();
-            if(choix<1 || choix>3) {
-                while(choix<1 || choix>3) {
-                    System.out.println("Le nombre que vous avez tapez est invalide !\nQue voulez-vous faire ? : ");
-                    System.out.println("1 : Echanger les ressources de 2 colons ");
-                    System.out.println("2 : Afficher le nombre de jaloux ");
-                    System.out.println("3 : Fin ");
-                    choix = sc.nextInt();
+            try{
+                choix = sc.nextInt();
+
+                switch(choix) {
+                    case 1 :
+                        echangeRessource();
+                        break;
+
+                    case 2 :
+                        afficherJaloux();
+                        break;
+
+                    case 3 :
+                        System.out.println("Fin du programme ! ");
+                        break;
+
+                    default:
+                        break;
                 }
+            } catch (InputMismatchException e) {
+                System.out.println("La valeure entrée n'est pas un entier !");
+                sc.next();
             }
 
-            switch(choix) {
-                case 1 :
-                    echangeRessource();
-                    break;
-
-                case 2 :
-                    afficherJaloux();
-                    break;
-
-                case 3 :
-                    System.out.println("Fin du programme ! ");
-                    break;
-            }
         }
     }
 
@@ -141,12 +131,13 @@ public class Colonie {
         char nomColon2 = sc.next().charAt(0);
 
         if(nomColon1 == nomColon2){
-            System.out.println("Vous ne pouvez pas lier le même colons.\nRedirection au menu !");
+            System.out.println("Vous ne pouvez pas lier le même colon.\nRedirection au menu !");
         }
         else{
             Colon colon1 = null;
             Colon colon2 = null;
             for(Colon colon : colons) {
+                // Recherche dans la colonie de la présence de colon1 & colon2
                 if(colon.getNom() == nomColon1) {
                     colon1 = colon;
                 }
@@ -154,36 +145,33 @@ public class Colonie {
                     colon2 = colon;
                 }
             }
-
             if (colon1==null || colon2==null){
                 System.out.println("Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
             }else {
                 if (colon1.recherchePasAmis(colon2) || colon2.recherchePasAmis(colon1)) {
-                    System.out.println("Le colon est déjà dans la liste des pas amis ");
+                    System.out.println("Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement");
                 } else {
+                    // Ajout dans colon1 & dans colon2 d'une relation 'pas amis'
                     colon1.addPasAmis(colon2);
                     colon2.addPasAmis(colon1);
                 }
             }
-
-            this.afficheRecap();
-
+            this.afficheColonsPasAmis();
         }
-
-
     }
 
     public void ajoutListePref() {
         sc.nextLine();
         System.out.println("Entrez le nom du colon : ");
         char nom = sc.nextLine().charAt(0);
+
         System.out.println("Entrez les noms des ressources, espacés entre eux : ");
         String ressource = sc.nextLine();
         String[] res = ressource.split(" ");
 
         if(res.length != ressourcesColonie.size() ){
             System.out.println("Le nombre de resource tappé n'est pas respecté !");
-            System.out.println("Vous avez rentré "+res.length+" ressources");
+            System.out.println("Vous avez rentré "+res.length+" ressources, au lieu de "+ ressourcesColonie.size()+" ressources.");
             System.out.println("Redirection vers le menu");
             return;
 
@@ -192,30 +180,25 @@ public class Colonie {
             List<Ressource> listePref = new ArrayList<Ressource>(ressourcesColonie.size());
 
             while(tok.hasMoreTokens()) {
+                // Ajout des ressources à la liste des préférences ressources
                 String chaine = tok.nextToken();
                 int nb = Integer.parseInt(chaine);
                 boolean trouve = false;
                 for(Ressource ressourceColonie : ressourcesColonie){
-
+                    // Parcours de la liste de ressources de la colonie
                     if(ressourceColonie.getNomRessource() == nb){
+                        // Présence de la ressource dans la liste de ressources de la colonie
                         trouve = true;
                     }
-
                 }
-
                 if(trouve){
-
                     Ressource r = new Ressource(nb);
                     listePref.add(r);
                 }
                 else{
-
                     System.out.println("La ressource ne peut pas être ajouté !");
-
                 }
-
             }
-
             boolean contient = false;
             for(Colon colon : colons) {
                 if(colon.getNom() == nom) {
@@ -227,7 +210,7 @@ public class Colonie {
                 System.out.println("Le colon n'existe pas !");
             }
 
-            System.out.println("Voici un récapitulatif de préférence de chaque Colon : ");
+            System.out.println("Récapitulatif de préférence de chaque Colon : ");
             for(Colon c : colons){
                 System.out.print(c.getNom()+" : ");
                 for(Ressource r : c.getPreferencesRessource()){
@@ -270,7 +253,6 @@ public class Colonie {
                 if(this.ressourcesColonie.get(pos).getDisponibilite()){
                     colons.get(i).setRessource(this.ressourcesColonie.get(pos));
                     this.ressourcesColonie.get(pos).setDisponibilite(false);
-                    this.ressourcesColonie.get(pos).setProrio(colons.get(i));
                     colons.get(i).setAttribue(true);
                     colons.get(i).setPosRessource(j);
                 }else{
@@ -282,49 +264,40 @@ public class Colonie {
 
     public void echangeRessource(){
         System.out.println("Entrez le nom du premier colon : ");
-        char prenomColon1 = sc.next().charAt(0);
+        char nomColon1 = sc.next().charAt(0);
         System.out.println("Entrez le nom du deuxième colon : ");
-        char prenomColon2 = sc.next().charAt(0);
-        if(prenomColon2 == prenomColon1) {
-
-            System.out.println("On peut pas échanger les ressources d'un même colon");
-            System.out.println(" Vous allez être redirigé au menu !");
-            return;
+        char nomColon2 = sc.next().charAt(0);
+        if(nomColon2 == nomColon1) {
+            System.out.println("On peut pas échanger les ressources d'un même colon.\nRedirection au menu !");
         }
         else{
             Colon colon1 = null;
             Colon colon2 = null;
 
+            // Vérification présence dans la colonie
             for(Colon c : colons) {
-                if(c.getNom() == prenomColon1) {
+                if(c.getNom() == nomColon1) {
                     colon1 = c;
                 }
-                if(c.getNom() == prenomColon2){
+                if(c.getNom() == nomColon2){
                     colon2 = c;
                 }
             }
 
-            if(colon1 == null && colon2 == null) {
-                System.out.println("Le colon 1 n'existe pas ! ");
-                System.out.println("Le colon 2 n'existe pas ! ");
-
-            } else if(colon1 == null) {
-                System.out.println("Le colon 1 n'existe pas ! ");
-
-            } else if(colon2 == null) {
-                System.out.println("Le colon 2 n'existe pas ! ");
-
-            } else {
+            if(colon1 == null || colon2 == null) {
+                System.out.println("Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
+            }
+            else {
                 Ressource aux = colon1.getRessource();
                 colon1.setRessource(colon2.getRessource());
                 colon2.setRessource(aux);
                 colon1.setPosRessource(colon1.getPosRessource());
                 colon2.setPosRessource(colon2.getPosRessource());
-            }
-            System.out.println("Les ressources entre le colon "+ prenomColon1+" et le colon "+prenomColon2+" on était échange");
+                System.out.println("Les ressources entre le colon "+ nomColon1 +" et le colon "+ nomColon2 +" on était échange");
 
-            System.out.println("Voici un récapitulatif des ressources de partages : ");
-            afficherObjets();
+                System.out.println("Récapitulatif des Colons et de leur Ressource:");
+                afficherObjets();
+            }
 
         }
 
@@ -352,7 +325,7 @@ public class Colonie {
     }
 
     public void afficherJaloux(){
-        System.out.println("Voici la liste des préférences de chaque colon : ");
+        System.out.println("Liste des préférences de chaque colon : ");
         for(Colon c : colons){
             System.out.print(c.getNom()+" : ");
             for(Ressource r : c.getPreferencesRessource()){
@@ -362,19 +335,19 @@ public class Colonie {
         }
         calculAffectation();
         System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
-        System.out.println("Voici un récapitulatif du partage de ressources dans la colonie : ");
+        System.out.println("Récapitulatif des Colons et de leur Ressource: ");
         afficherObjets();
 
     }
 
-    public void afficheRecap(){
-        System.out.println("Voici un récapitulatif de chaque colon pas amis : ");
+    public void afficheColonsPasAmis(){
+        System.out.println("Récapitulatif de chaque colon pas amis : ");
         for(Colon c : colons){
             System.out.print(c.getNom()+" : ");
             for(Colon cp : c.getPasAmis()){
                 System.out.print(cp.getNom()+" ");
             }
-            System.out.print("\n");
+            System.out.println();
         }
     }
 
