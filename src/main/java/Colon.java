@@ -88,6 +88,7 @@ public class Colon {
     public boolean recherchePasAmis(Colon c){
         for(Colon i : this.pasAmis){
             if(i.equals(c)){
+                // Présence du colon c dans la liste des 'pas amis' du colon
                 return true;
             }
         }

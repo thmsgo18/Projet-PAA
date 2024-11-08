@@ -82,6 +82,7 @@ public class Colonie {
                         break;
                 }
             } catch (InputMismatchException e) {
+                // La valeure saisie n'est pas un int
                 System.out.println("La valeure entrée n'est pas un entier !");
                 sc.next();
             }
@@ -117,6 +118,7 @@ public class Colonie {
                         break;
                 }
             } catch (InputMismatchException e) {
+                // La valeure saisie n'est pas un int
                 System.out.println("La valeure entrée n'est pas un entier !");
                 sc.next();
             }
@@ -202,6 +204,7 @@ public class Colonie {
             boolean contient = false;
             for(Colon colon : colons) {
                 if(colon.getNom() == nom) {
+                    // Le colon est présent dans la colonie
                     colon.setPreferencesRessource(listePref);
                     contient = true;
                 }
@@ -225,7 +228,7 @@ public class Colonie {
     public boolean verificationListePref() {
         List<Colon> colonsIncomplets = new ArrayList<Colon>();
 
-        //On vérifie que la liste de préférences de chaque colon est complète
+        //Vérification que la liste de préférences de chaque colon est complète
         for(Colon colon : colons) {
             //Si non, on ajoute le colon à la liste des colons incomplets
             if(colon.getPreferencesRessource().size() != colons.size()) {
@@ -233,7 +236,7 @@ public class Colonie {
             }
         }
 
-        //On affiche la liste des colons incomplets
+        // Affichage de la liste des colons incomplets
         if(!colonsIncomplets.isEmpty()) {
             System.out.println("Liste des colons avec des listes de préférences vides ou incomplètes : ");
             for(Colon colon : colonsIncomplets) {
@@ -247,15 +250,20 @@ public class Colonie {
 
     public void partageRessources(){
         for(int i=0; i<colons.size(); i++){
+            // Parcours de tout les colons de la colonie
             int j=0;
             while(!colons.get(i).isAttribue()){
+                // Tant que le colon n'a pas de ressource attribuée
                 int pos = getPositionRessource(colons.get(i).getUnePreferenceRessource(j));
                 if(this.ressourcesColonie.get(pos).getDisponibilite()){
+                    // La ressource est disponible
                     colons.get(i).setRessource(this.ressourcesColonie.get(pos));
                     this.ressourcesColonie.get(pos).setDisponibilite(false);
                     colons.get(i).setAttribue(true);
                     colons.get(i).setPosRessource(j);
                 }else{
+                    // La ressource n'est pas disponible
+                    // Passage à la ressource préférée suivante
                     j++;
                 }
             }
@@ -274,7 +282,7 @@ public class Colonie {
             Colon colon1 = null;
             Colon colon2 = null;
 
-            // Vérification présence dans la colonie
+            // Vérification présence des colons dans la colonie
             for(Colon c : colons) {
                 if(c.getNom() == nomColon1) {
                     colon1 = c;
@@ -288,6 +296,7 @@ public class Colonie {
                 System.out.println("Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
             }
             else {
+                // Échange des ressources entre les deux colons
                 Ressource aux = colon1.getRessource();
                 colon1.setRessource(colon2.getRessource());
                 colon2.setRessource(aux);
@@ -307,17 +316,19 @@ public class Colonie {
         int res = 0;
         boolean jaloux;
         for(Colon c  : colons) {
+            // Parcours de tous les colons de la colonie
             jaloux = false;
             List<Colon> pasAmis = c.getPasAmis();
             for(Colon c1 : pasAmis){
                 for(int i = 0; i<c.getPosRessource();i++) {
-                    if (c1.getRessource().equals(c.getPreferencesRessource().get(i)) ) {
+                    if (c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
+                        // Jalousie de c1
                         jaloux = true;
-
                     }
                 }
             }
             if(jaloux){
+                // Incrémentation du nombre de jaloux
                 res++;
             }
         }
@@ -337,7 +348,6 @@ public class Colonie {
         System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
         System.out.println("Récapitulatif des Colons et de leur Ressource: ");
         afficherObjets();
-
     }
 
     public void afficheColonsPasAmis(){
