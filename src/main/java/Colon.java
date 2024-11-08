@@ -88,6 +88,15 @@ public class Colon {
         this.pasAmis.remove(colon);
     }
 
+    public boolean recherchePasAmis(Colon c){
+        for(Colon i : this.pasAmis){
+            if(i.equals(c)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Ressource getRessource() {
         return ressource;
     }
@@ -97,7 +106,7 @@ public class Colon {
 
     public int getPosRessource() {
         for(int i =0;i<preferencesRessource.size();i++){
-            if(preferencesRessource.get(i).equals(ressource)) {
+            if(preferencesRessource.get(i).equals(this.ressource)) {
                 return i;
             }
         }
