@@ -13,7 +13,5 @@ public class Main {
         } catch (InputMismatchException e) {
            System.out.println(e.getMessage());
         }
-
-
     }
 }

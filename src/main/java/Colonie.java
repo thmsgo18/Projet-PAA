@@ -199,12 +199,27 @@ public class Colonie {
                 }
                 else{
                     System.out.println("La ressource ne peut pas être ajouté !");
+                    return;
                 }
             }
             boolean contient = false;
             for(Colon colon : colons) {
                 if(colon.getNom() == nom) {
                     // Le colon est présent dans la colonie
+                    // Vérification des doublons dans la liste des préférences
+                    for(int i=0;i<listePref.size();i++){
+                        boolean doublon = false;
+                        for(int j=i+1;j<listePref.size();j++){
+                            if(listePref.get(i).getNomRessource() == listePref.get(j).getNomRessource()){
+                                // Ressource est en double
+                                doublon= true;
+                            }
+                        }
+                        if(doublon){
+                            listePref.clear();
+                            System.out.println("Une ressource a été saisie plusieurs fois");
+                        }
+                    }
                     colon.setPreferencesRessource(listePref);
                     contient = true;
                 }
@@ -212,6 +227,7 @@ public class Colonie {
             if(!contient) {
                 System.out.println("Le colon n'existe pas !");
             }
+
 
             System.out.println("Récapitulatif de préférence de chaque Colon : ");
             for(Colon c : colons){
