@@ -162,81 +162,82 @@ public class Colonie {
         }
     }
 
+    private boolean ressourceInList(List<Ressource>l, int nomRessource) {
+        for(Ressource ressource : l){
+            // Parcours de la liste de ressources de la colonie
+            if(ressource.getNomRessource() == nomRessource){
+                // Présence de la ressource dans la liste de ressources de la colonie
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void ajoutListePref() {
         sc.nextLine();
         System.out.println("Entrez le nom du colon : ");
         char nom = sc.nextLine().charAt(0);
-
-        System.out.println("Entrez les noms des ressources, espacés entre eux : ");
-        String ressource = sc.nextLine();
-        String[] res = ressource.split(" ");
-
-        if(res.length != ressourcesColonie.size() ){
-            System.out.println("Le nombre de resource tappé n'est pas respecté !");
-            System.out.println("Vous avez rentré "+res.length+" ressources, au lieu de "+ ressourcesColonie.size()+" ressources.");
+        // Vérification de si le colon existe
+        boolean contient = false;
+        for(Colon colon : colons) {
+            if(colon.getNom() == nom) {
+                // Le colon est présent dans la colonie
+                contient = true;
+            }
+        }
+        if(!contient) {
+            System.out.println("Le colon n'existe pas !");
             System.out.println("Redirection vers le menu");
             return;
-
         }else{
-            StringTokenizer tok = new StringTokenizer(ressource," ");
-            List<Ressource> listePref = new ArrayList<Ressource>(ressourcesColonie.size());
 
-            while(tok.hasMoreTokens()) {
-                // Ajout des ressources à la liste des préférences ressources
-                String chaine = tok.nextToken();
-                int nb = Integer.parseInt(chaine);
-                boolean trouve = false;
-                for(Ressource ressourceColonie : ressourcesColonie){
-                    // Parcours de la liste de ressources de la colonie
-                    if(ressourceColonie.getNomRessource() == nb){
-                        // Présence de la ressource dans la liste de ressources de la colonie
-                        trouve = true;
-                    }
-                }
-                if(trouve){
-                    Ressource r = new Ressource(nb);
-                    listePref.add(r);
-                }
-                else{
-                    System.out.println("La ressource ne peut pas être ajouté !");
-                    return;
-                }
-            }
-            boolean contient = false;
-            for(Colon colon : colons) {
-                if(colon.getNom() == nom) {
-                    // Le colon est présent dans la colonie
-                    // Vérification des doublons dans la liste des préférences
-                    for(int i=0;i<listePref.size();i++){
-                        boolean doublon = false;
-                        for(int j=i+1;j<listePref.size();j++){
-                            if(listePref.get(i).getNomRessource() == listePref.get(j).getNomRessource()){
-                                // Ressource est en double
-                                doublon= true;
-                            }
-                        }
-                        if(doublon){
-                            listePref.clear();
-                            System.out.println("Une ressource a été saisie plusieurs fois");
+            System.out.println("Entrez les noms des ressources, espacés entre eux : ");
+            String ressource = sc.nextLine();
+            String[] res = ressource.split(" ");
+
+            // Vérification de si il y'a toute la liste de préférence des ressources
+            if(res.length != ressourcesColonie.size() ){
+                System.out.println("Le nombre de resource tapé n'est pas respecté !");
+                System.out.println("Vous avez rentré "+res.length+" ressources, au lieu de "+ ressourcesColonie.size()+" ressources.");
+                System.out.println("Redirection vers le menu");
+                return;
+            }else{
+
+                StringTokenizer tok = new StringTokenizer(ressource," ");
+                List<Ressource> listePref = new ArrayList<Ressource>(ressourcesColonie.size());
+
+                while(tok.hasMoreTokens()) {
+                    // Ajout des ressources à la liste des préférences ressources
+                    String chaine = tok.nextToken();
+                    int nb = Integer.parseInt(chaine);
+                    if(this.ressourceInList(this.ressourcesColonie, nb)){
+                        Ressource r = new Ressource(nb);
+                        if(this.ressourceInList(listePref, nb)){
+                            System.out.println("La ressource ne peut pas être ajouté !");
+                            System.out.println("Redirection vers le menu");
+                            return;
+                        }else{
+                            listePref.add(r);
                         }
                     }
-                    colon.setPreferencesRessource(listePref);
-                    contient = true;
+                    else{
+                        System.out.println("La ressource ne peut pas être ajouté !");
+                        System.out.println("Redirection vers le menu");
+                        return;
+                    }
+                }
+                this.getColon(nom).setPreferencesRessource(listePref);
+
+                System.out.println("Récapitulatif de préférence de chaque Colon : ");
+                for(Colon c : colons){
+                    System.out.print(c.getNom()+" : ");
+                    for(Ressource r : c.getPreferencesRessource()){
+                        System.out.print(r.getNomRessource()+" ");
+                    }
+                    System.out.print("\n");
                 }
             }
-            if(!contient) {
-                System.out.println("Le colon n'existe pas !");
-            }
 
-
-            System.out.println("Récapitulatif de préférence de chaque Colon : ");
-            for(Colon c : colons){
-                System.out.print(c.getNom()+" : ");
-                for(Ressource r : c.getPreferencesRessource()){
-                    System.out.print(r.getNomRessource()+" ");
-                }
-                System.out.print("\n");
-            }
         }
 
     }
@@ -398,7 +399,15 @@ public class Colonie {
         return -1;
     }
 
-    public List<Colon> getColons() {
+    public Colon getColon(char nom){
+        for(Colon c : this.colons){
+            if(c.getNom() == (nom)){
+                return c;
+            }
+        }
+        return null;
+    }
+    public List<Colon> getColon() {
         return colons;
     }
     public void setColons(List<Colon> colons) {
