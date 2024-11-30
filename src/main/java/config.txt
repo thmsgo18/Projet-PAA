@@ -1,6 +1,6 @@
-A
-B
-C
-1
-2
-3
+colon(A).
+colon(B).
+colon(C).
+ressource(1).
+ressource(2).
+ressource(3).

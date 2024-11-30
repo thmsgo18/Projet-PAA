@@ -1,4 +1,7 @@
+import java.io.IOException;
 import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class Colonie {
     private String nom;
@@ -49,6 +52,53 @@ public class Colonie {
         System.out.println();
     }
 
+    public void init2() throws IOException {
+        // Initialisation de la colonie
+        String cheminFichier = "./config.txt";
+        StringBuilder sb = new StringBuilder();
+        try{
+            FileReader fr = new FileReader(cheminFichier);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while((line = br.readLine()) != null){
+                sb.append(line);
+            }
+            StringTokenizer tok = new StringTokenizer(sb.toString(),".");
+            while(tok.hasMoreTokens()){
+                String commande = tok.nextToken();
+                StringTokenizer tok2 = new StringTokenizer(commande,"(),");
+                String nomCommande = tok2.nextToken();
+                switch(nomCommande){
+                    case "colon":
+                            String nomColon = tok2.nextToken();
+                            Colon colon = new Colon(nomColon.charAt(0));
+                            this.colons.add(colon);
+                    case "ressource":
+                            String nomRessource = tok2.nextToken();
+                            Ressource ressource = new Ressource(Integer.parseInt(nomRessource));
+                            this.ressourcesColonie.add(ressource);
+                    case "deteste":
+                            String nomColon1 = tok2.nextToken();
+                            String nomColon2 = tok2.nextToken();
+                            this.ajoutRelation(nomColon1.charAt(0), nomColon2.charAt(0));
+                    case "preferences":
+                            String nomColonL = tok2.nextToken();
+                            StringBuilder stringBuilder = new StringBuilder();
+                            while(tok2.hasMoreTokens()){
+                                String nomPref = tok2.nextToken();
+                                stringBuilder.append(nomPref+" ");
+                            }
+                            this.ajoutListePref(nomColonL.charAt(0), stringBuilder.toString());
+                    default :
+                        System.out.println("ERREUR DANS LA RECONNAISSANCE DE LA COMMANDE");
+                        return;
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void menu1() {
         int choix = -1;
 
@@ -61,11 +111,20 @@ public class Colonie {
                 choix = sc.nextInt();
                 switch (choix) {
                     case 1:
-                        ajoutRelation();
+                        System.out.println("Entrez le nom du colon 1 ?");
+                        char nomColon1 = sc.next().charAt(0);
+                        System.out.println("Entrez le nom du colon 2 ?");
+                        char nomColon2 = sc.next().charAt(0);
+                        ajoutRelation(nomColon1, nomColon2);
                         break;
 
                     case 2:
-                        ajoutListePref();
+                        sc.nextLine();
+                        System.out.println("Entrez le nom du colon : ");
+                        char nom = sc.nextLine().charAt(0);
+                        System.out.println("Entrez les noms des ressources, espacés entre eux : ");
+                        String ressource = sc.nextLine();
+                        ajoutListePref(nom, ressource);
                         break;
 
                     case 3:
@@ -126,12 +185,7 @@ public class Colonie {
         }
     }
 
-    public void ajoutRelation() {
-        System.out.println("Entrez le nom du colon 1 ?");
-        char nomColon1 = sc.next().charAt(0);
-        System.out.println("Entrez le nom du colon 2 ?");
-        char nomColon2 = sc.next().charAt(0);
-
+    public void ajoutRelation(char nomColon1, char nomColon2) {
         if(nomColon1 == nomColon2){
             System.out.println("Vous ne pouvez pas lier le même colon.\nRedirection au menu !");
         }
@@ -173,11 +227,7 @@ public class Colonie {
         return false;
     }
 
-    public void ajoutListePref() {
-        sc.nextLine();
-        System.out.println("Entrez le nom du colon : ");
-        char nom = sc.nextLine().charAt(0);
-        // Vérification de si le colon existe
+    public void ajoutListePref(char nom, String ressource) {
         boolean contient = false;
         for(Colon colon : colons) {
             if(colon.getNom() == nom) {
@@ -190,9 +240,6 @@ public class Colonie {
             System.out.println("Redirection vers le menu");
             return;
         }else{
-
-            System.out.println("Entrez les noms des ressources, espacés entre eux : ");
-            String ressource = sc.nextLine();
             String[] res = ressource.split(" ");
 
             // Vérification de si il y'a toute la liste de préférence des ressources
