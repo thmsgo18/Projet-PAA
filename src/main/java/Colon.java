@@ -2,14 +2,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Colon {
-    private char nom;
+    private String nom;
     private List<Ressource> preferencesRessource;
     private List<Colon> pasAmis;
     private Ressource ressource;
     private int posRessource;
     private boolean attribue;
 
-    public Colon(char nom) {
+    public Colon(String nom) {
         this.nom = nom;
         this.preferencesRessource = new ArrayList<>();
         this.pasAmis = new ArrayList<>();
@@ -17,7 +17,7 @@ public class Colon {
         this.posRessource = -1;
         this.attribue = false;
     }
-    public Colon(char nom, List<Colon> pasAmis) {
+    public Colon(String nom, List<Colon> pasAmis) {
         this.nom = nom;
         this.preferencesRessource = new ArrayList<>();
         this.pasAmis = new ArrayList<>();
@@ -25,7 +25,7 @@ public class Colon {
         this.posRessource = -1;
         this.attribue = false;
     }
-    public Colon(char nom, List<Ressource> preferencesRessource, List<Colon> pasAmis) {
+    public Colon(String nom, List<Ressource> preferencesRessource, List<Colon> pasAmis) {
         this.nom = nom;
         this.preferencesRessource = preferencesRessource;
         this.pasAmis = pasAmis;
@@ -46,10 +46,10 @@ public class Colon {
     }
 
 
-    public char getNom() {
+    public String getNom() {
         return nom;
     }
-    public void setNom(char nom) {
+    public void setNom(String nom) {
         this.nom = nom;
     }
 
@@ -122,6 +122,6 @@ public class Colon {
     }
 
     public boolean equals(Colon colon) {
-        return this.nom == colon.getNom();
+        return this.nom.equals(colon.getNom());
     }
 }

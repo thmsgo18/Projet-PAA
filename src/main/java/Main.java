@@ -8,9 +8,8 @@ public class Main {
         String nom = sc.nextLine();
         try{
             Colonie colonie = new Colonie(nom);
-            colonie.menu1();
-
-        } catch (InputMismatchException e) {
+            colonie.init2();
+        } catch (Exception e) {
            System.out.println(e.getMessage());
         }
     }
