@@ -7,8 +7,9 @@ public class Main {
         System.out.println("Entrez le nom de la colonie : ");
         String nom = sc.nextLine();
         try{
+            String cheminFichier = "src/main/java/config.txt";
             Colonie colonie = new Colonie(nom);
-            colonie.init2();
+            colonie.init2(cheminFichier);
         } catch (Exception e) {
            System.out.println(e.getMessage());
         }

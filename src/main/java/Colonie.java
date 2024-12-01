@@ -54,9 +54,8 @@ public class Colonie {
         System.out.println();
     }
 
-    public void init2() throws IOException {
+    public void init2(String cheminFichier) throws IOException {
         // Initialisation de la colonie
-        String cheminFichier = "src/main/java/config.txt";
         StringBuilder sb = new StringBuilder();
         try{
             FileReader fr = new FileReader(cheminFichier);
@@ -101,7 +100,7 @@ public class Colonie {
                 }
             }
             //this.afficherObjets();
-            this.afficherJaloux();
+            //this.afficherJaloux();
             this.afficheColonsPasAmis();
         }catch (IOException e){
             System.out.println(e.getMessage());
