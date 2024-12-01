@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.PrintWriter;
 
 public class Colonie {
     private String nom;
@@ -10,6 +11,7 @@ public class Colonie {
     private int affectation;
     private final Scanner sc;
     private final int nbrMaxColons;
+    private String cheminFichierConf;
 
     public Colonie(String nom) {
         this.nom = nom;
@@ -18,6 +20,7 @@ public class Colonie {
         this.sc = new Scanner(System.in);
         this.affectation = 0;
         this.nbrMaxColons=26;
+        this.cheminFichierConf="";
     }
 
     public void init() throws InputMismatchException{
@@ -54,7 +57,7 @@ public class Colonie {
         System.out.println();
     }
 
-    public void init2(String cheminFichier) throws IOException {
+    public void init2(String cheminFichier){
         // Initialisation de la colonie
         StringBuilder sb = new StringBuilder();
         try{
@@ -99,9 +102,6 @@ public class Colonie {
                         break;
                 }
             }
-            //this.afficherObjets();
-            //this.afficherJaloux();
-            this.afficheColonsPasAmis();
         }catch (IOException e){
             System.out.println(e.getMessage());
             try{
@@ -109,6 +109,75 @@ public class Colonie {
                 colonie.menu1();
             } catch (InputMismatchException IME) {
                 System.out.println(IME.getMessage());
+            }
+        }
+    }
+
+    public boolean verifFichier (String cheminFichier){
+        try {
+            FileReader fr = new FileReader(cheminFichier);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            boolean colon =true;
+            boolean ressource =true;
+            boolean deteste = true ;
+            int nbrcolons = 0;
+            int nbrressources = 0;
+            while((line = br.readLine()) != null){
+                if(line.charAt(line.length()-1)=='.'){
+                    if(line.startsWith("colon")){
+                        if(colon){
+                            nbrcolons++;
+                        }else{
+                            return false;
+                        }
+                    }else if(line.startsWith("ressource")){
+                        if(ressource){
+                            colon = false;
+                            nbrressources++;
+                        }else{
+                            return false;
+                        }
+                    }else if(line.startsWith("deteste")){
+                        if(deteste){
+                            colon = false;
+                            ressource = false;
+                        }else{
+                            return false;
+                        }
+                    }else if(line.startsWith("preferences")){
+                        colon = false;
+                        ressource = false;
+                        deteste = false;
+                    }else{
+                        return false;
+                    }
+                }else{
+                    return false;
+                }
+            }
+            if(nbrcolons==nbrressources){
+                this.cheminFichierConf = cheminFichier;
+                return true;
+            }else{
+                return false;
+            }
+        }catch(IOException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public void sauvegard(String chemin){
+        if(chemin.equals(this.cheminFichierConf)){
+            System.out.println("ERREUR : Le fichier est le meme que pour le fichier de configuration");
+        }else{
+            try(PrintWriter writer = new PrintWriter(chemin)){
+                for(Colon colon : this.colons){
+                    writer.println(colon.getNom()+":"+colon.getRessource().getNomRessource());
+                }
+            }catch(IOException e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -123,9 +192,9 @@ public class Colonie {
 
         while(choix!=3) {
             System.out.println("Que voulez-vous faire : ");
-            System.out.println("1 : Ajouter une relation 'ne s'aiment pas' entre deux colons ");
-            System.out.println("2 : Ajouter une liste de préférences à un colon ");
-            System.out.println("3 : Fin ");
+            System.out.println("        1 : Ajouter une relation 'ne s'aiment pas' entre deux colons ");
+            System.out.println("        2 : Ajouter une liste de préférences à un colon ");
+            System.out.println("        3 : Fin ");
             try {
                 choix = sc.nextInt();
                 switch (choix) {
@@ -134,7 +203,8 @@ public class Colonie {
                         String nomColon1 = sc.next();
                         System.out.println("Entrez le nom du colon 2 ?");
                         String nomColon2 = sc.next();
-                        ajoutRelation(nomColon1, nomColon2);
+                        this.ajoutRelation(nomColon1, nomColon2);
+                        this.afficherColonsPasAmis();
                         break;
 
                     case 2:
@@ -143,7 +213,8 @@ public class Colonie {
                         String nom = sc.nextLine();
                         System.out.println("Entrez les noms des ressources, espacés entre eux : ");
                         String ressource = sc.nextLine();
-                        ajoutListePref(nom, ressource);
+                        this.ajoutListePref(nom, ressource);
+                        this.afficherListePrefColons();
                         break;
 
                     case 3:
@@ -168,20 +239,26 @@ public class Colonie {
     }
 
     public void menu2(){
-        System.out.println("Bienvenue au menu 2 que voulez-vous faire ?");
         System.out.println("Récapitulatif des Colons et de leur Ressource:");
         afficherObjets();
         int choix = -1;
         while(choix!=3){
-            System.out.println("1 : Echanger les ressources de 2 colons ");
-            System.out.println("2 : Afficher le nombre de jaloux ");
-            System.out.println("3 : Fin ");
+            System.out.println("Menu 2 que voulez-vous faire : ");
+            System.out.println("        1 : Echanger les ressources de 2 colons ");
+            System.out.println("        2 : Afficher le nombre de jaloux ");
+            System.out.println("        3 : Fin ");
             try{
                 choix = sc.nextInt();
-
+                sc.nextLine();
                 switch(choix) {
                     case 1 :
-                        echangeRessource();
+                        System.out.println("Entrez le nom du premier colon : ");
+                        String nomColon1 = sc.nextLine();
+                        System.out.println("Entrez le nom du deuxième colon : ");
+                        String nomColon2 = sc.nextLine();
+                        echangeRessource(nomColon1, nomColon2);
+                        System.out.println("Récapitulatif des Colons et de leur Ressource:");
+                        afficherObjets();
                         break;
 
                     case 2 :
@@ -204,9 +281,69 @@ public class Colonie {
         }
     }
 
+    public void menuSolutionAuto() throws InputMismatchException {
+        int choix = -1;
+        this.afficherColonsPasAmis();
+        this.afficherListePrefColons();
+        while(choix!=3){
+            System.out.println("Menu solution auto que voulez-vous faire : ");
+            System.out.println("        1 : Résolution automatique");
+            System.out.println("        2 : sauvegarder la solution actuelle");
+            System.out.println("        3 : Fin");
+            try{
+                System.out.println("Quelle est votre choix ?");
+                choix = sc.nextInt();
+                sc.nextLine();
+                switch(choix){
+                    case 1:
+                        System.out.println("Affectation des ressources de colonie :");
+                        resolutionAutomatique();
+                        this.afficherObjets();
+                        break;
+                    case 2 :
+                        System.out.println("Vous avez choisit la sauvegarde ! ");
+                        System.out.println("Entrez le nom du fichier où sera sauvegarder la colonie : ");
+                        String chemin = sc.nextLine();
+                        this.sauvegard(chemin);
+                        break;
+
+                    case 3 :
+                        System.out.println("Fin du programme !");
+                        break;
+                    default:
+
+                }
+
+            }catch(InputMismatchException e){
+                System.out.println("Vous avez taper un mauvais caractere !");
+                sc.nextLine();
+
+            }
+        }
+
+    }
+
+    public void resolutionAutomatique(){
+        int i = 0;
+        int fin = this.colons.get(0).getPreferencesRessource().size();
+        while(i<fin){
+            for(Colon c :this.colons){
+                for(Ressource r : ressourcesColonie){
+                    if((r.equals(c.getPreferencesRessource().get(i))&&r.getDisponibilite()&& !(c.isAttribue()))){
+                        r.setDisponibilite(false);
+                        c.setRessource(r);
+                        c.setAttribue(true);
+                        c.setPosRessource(i);
+                    }
+                }
+            }
+            i++;
+        }
+    }
+
     public void ajoutRelation(String nomColon1, String nomColon2) {
         if(nomColon1.equals(nomColon2)){
-            System.out.println("Vous ne pouvez pas lier le même colon.\nRedirection au menu !");
+            System.out.println("ERREUR : Vous ne pouvez pas lier le même colon.\nRedirection au menu !");
         }
         else{
             Colon colon1 = null;
@@ -221,17 +358,16 @@ public class Colonie {
                 }
             }
             if (colon1==null || colon2==null){
-                System.out.println("Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
+                System.out.println("ERREUR : Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
             }else {
                 if (colon1.recherchePasAmis(colon2) || colon2.recherchePasAmis(colon1)) {
-                    System.out.println("Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement");
+                    System.out.println("ERREUR : Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement");
                 } else {
                     // Ajout dans colon1 & dans colon2 d'une relation 'pas amis'
                     colon1.addPasAmis(colon2);
                     colon2.addPasAmis(colon1);
                 }
             }
-            this.afficheColonsPasAmis();
         }
     }
 
@@ -255,7 +391,7 @@ public class Colonie {
             }
         }
         if(!contient) {
-            System.out.println("Le colon n'existe pas !");
+            System.out.println("ERREUR : Le colon n'existe pas !");
             System.out.println("Redirection vers le menu");
             return;
         }else{
@@ -263,7 +399,7 @@ public class Colonie {
 
             // Vérification de si il y'a toute la liste de préférence des ressources
             if(res.length != ressourcesColonie.size() ){
-                System.out.println("Le nombre de resource tapé n'est pas respecté !");
+                System.out.println("ERREUR : Le nombre de resource tapé n'est pas respecté !");
                 System.out.println("Vous avez rentré "+res.length+" ressources, au lieu de "+ ressourcesColonie.size()+" ressources.");
                 System.out.println("Redirection vers le menu");
                 return;
@@ -278,7 +414,7 @@ public class Colonie {
                     if(this.ressourceInList(this.ressourcesColonie, chaine)){
                         Ressource r = new Ressource(chaine);
                         if(this.ressourceInList(listePref, chaine)){
-                            System.out.println("La ressource ne peut pas être ajouté !");
+                            System.out.println("ERREUR : La ressource ne peut pas être ajouté !");
                             System.out.println("Redirection vers le menu");
                             return;
                         }else{
@@ -286,25 +422,14 @@ public class Colonie {
                         }
                     }
                     else{
-                        System.out.println("La ressource ne peut pas être ajouté !");
+                        System.out.println("ERREUR : La ressource ne peut pas être ajouté !");
                         System.out.println("Redirection vers le menu");
                         return;
                     }
                 }
                 this.getColon(nom).setPreferencesRessource(listePref);
-
-                System.out.println("Récapitulatif de préférence de chaque Colon : ");
-                for(Colon c : colons){
-                    System.out.print(c.getNom()+" : ");
-                    for(Ressource r : c.getPreferencesRessource()){
-                        System.out.print(r.getNomRessource()+" ");
-                    }
-                    System.out.print("\n");
-                }
             }
-
         }
-
     }
 
     public boolean verificationListePref() {
@@ -320,7 +445,7 @@ public class Colonie {
 
         // Affichage de la liste des colons incomplets
         if(!colonsIncomplets.isEmpty()) {
-            System.out.println("Liste des colons avec des listes de préférences vides ou incomplètes : ");
+            System.out.println("ERREUR : Liste des colons avec des listes de préférences vides ou incomplètes : ");
             for(Colon colon : colonsIncomplets) {
                 System.out.println(colon.getNom());
             }
@@ -352,13 +477,9 @@ public class Colonie {
         }
     }
 
-    public void echangeRessource(){
-        System.out.println("Entrez le nom du premier colon : ");
-        char nomColon1 = sc.next().charAt(0);
-        System.out.println("Entrez le nom du deuxième colon : ");
-        char nomColon2 = sc.next().charAt(0);
-        if(nomColon2 == nomColon1) {
-            System.out.println("On peut pas échanger les ressources d'un même colon.\nRedirection au menu !");
+    public void echangeRessource(String nomColon1, String nomColon2){
+        if(nomColon2.equals(nomColon1)) {
+            System.out.println("ERREUR : On peut pas échanger les ressources d'un même colon.\nRedirection au menu !");
         }
         else{
             Colon colon1 = null;
@@ -375,7 +496,7 @@ public class Colonie {
             }
 
             if(colon1 == null || colon2 == null) {
-                System.out.println("Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
+                System.out.println("ERREUR : Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
             }
             else {
                 // Échange des ressources entre les deux colons
@@ -386,8 +507,6 @@ public class Colonie {
                 colon2.setPosRessource(colon2.getPosRessource());
                 System.out.println("Les ressources entre le colon "+ nomColon1 +" et le colon "+ nomColon2 +" on était échange");
 
-                System.out.println("Récapitulatif des Colons et de leur Ressource:");
-                afficherObjets();
             }
 
         }
@@ -432,10 +551,10 @@ public class Colonie {
         afficherObjets();
     }
 
-    public void afficheColonsPasAmis(){
+    public void afficherColonsPasAmis(){
         System.out.println("Récapitulatif de chaque colon pas amis : ");
         for(Colon c : colons){
-            System.out.print(c.getNom()+" : ");
+            System.out.print("  "+c.getNom()+" : ");
             for(Colon cp : c.getPasAmis()){
                 System.out.print(cp.getNom()+" ");
             }
@@ -443,9 +562,20 @@ public class Colonie {
         }
     }
 
+    public void afficherListePrefColons(){
+        System.out.println("Récapitulatif de préférence de chaque Colon : ");
+        for(Colon c : colons){
+            System.out.print("  "+c.getNom()+" : ");
+            for(Ressource r : c.getPreferencesRessource()){
+                System.out.print(r.getNomRessource()+" ");
+            }
+            System.out.print("\n");
+        }
+    }
+
     public void afficherObjets() {
         for(Colon c : colons) {
-            System.out.println(c.getNom() + ":" + c.getRessource().getNomRessource());
+            System.out.println("    "+c.getNom() + ":" + c.getRessource().getNomRessource());
         }
     }
 
