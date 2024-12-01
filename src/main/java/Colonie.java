@@ -100,7 +100,7 @@ public class Colonie {
                         break;
                 }
             }
-            this.afficherObjets();
+            //this.afficherObjets();
             this.afficherJaloux();
             this.afficheColonsPasAmis();
         }catch (IOException e){
