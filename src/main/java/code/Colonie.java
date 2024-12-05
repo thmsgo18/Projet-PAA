@@ -1,8 +1,9 @@
-import java.io.IOException;
+package code;
+
+import code.exception.*;
+
+import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.PrintWriter;
 
 public class Colonie {
     private String nom;
@@ -31,15 +32,24 @@ public class Colonie {
         if(n instanceof Integer && n<=this.nbrMaxColons && n>=0){
             // Création des colons et des ressources
             for (int i = 0; i < n; i++) {
-                System.out.println("Entrez le nom du colon"+i+" :");
+                System.out.println("Entrez le nom du colon"+(i+1)+" :");
                 String nomColon = sc.nextLine();
                 Colon colon = new Colon(nomColon);
-                this.colons.add(colon);
+                try{
+                    this.addColon(colon);
+                } catch (ColonException e) {
+                    System.out.println(e.getMessage());
+                }
 
-                System.out.println("Entrez le nom de la ressource"+i+" :");
+                System.out.println("Entrez le nom de la ressource"+(i+1)+" :");
                 String nomRessource = sc.nextLine();
                 Ressource ressource = new Ressource(nomRessource);
-                this.ressourcesColonie.add(ressource);
+                try{
+                    this.addRessource(ressource);
+                }catch(RessourceException e) {
+                    System.out.println(e.getMessage());
+                }
+
             }
         }
         else{
@@ -57,58 +67,128 @@ public class Colonie {
         System.out.println();
     }
 
-    public void init2(String cheminFichier){
+    public void init2(String cheminFichier)throws IOException, FichierException, ColonieException {
         // Initialisation de la colonie
-        StringBuilder sb = new StringBuilder();
-        try{
-            FileReader fr = new FileReader(cheminFichier);
+        boolean c =true;
+        boolean r =true;
+        boolean d = true ;
+        int nbrcolons = 0;
+        int nbrressources = 0;
+        int nbrligne = 0;
+        File file = new File(cheminFichier);
+        if(!file.exists()){
+            throw new IOException();
+        }else {
+            FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line;
-            while((line = br.readLine()) != null){
-                sb.append(line);
-            }
-            StringTokenizer tok = new StringTokenizer(sb.toString(),".");
-            while(tok.hasMoreTokens()){
-                String commande = tok.nextToken();
-                StringTokenizer tok2 = new StringTokenizer(commande,"( ),");
-                String nomCommande = tok2.nextToken();
-                switch(nomCommande){
-                    case "colon":
-                            String nomColon = tok2.nextToken();
-                            Colon colon = new Colon(nomColon);
-                            this.colons.add(colon);
-                            break;
-                    case "ressource":
-                            String nomRessource = tok2.nextToken();
-                            Ressource ressource = new Ressource(nomRessource);
-                            this.ressourcesColonie.add(ressource);
-                            break;
-                    case "deteste":
-                            String nomColon1 = tok2.nextToken();
-                            String nomColon2 = tok2.nextToken();
-                            this.ajoutRelation(nomColon1, nomColon2);
-                            break;
-                    case "preferences":
-                            String nomColonL = tok2.nextToken();
-                            StringBuilder stringBuilder = new StringBuilder();
-                            while(tok2.hasMoreTokens()){
-                                String nomPref = tok2.nextToken();
-                                stringBuilder.append(nomPref+" ");
+            while ((line = br.readLine()) != null) {
+                if(line.charAt(line.length()-1)=='.'){
+                    line = line.replace(".","");
+                    StringTokenizer tok = new StringTokenizer(line, "( ),");
+                    String nomCommande = tok.nextToken();
+                    switch (nomCommande) {
+                        case "colon":
+                            if (c) {
+                                if (tok.hasMoreTokens()) {
+                                    String nomColon = tok.nextToken();
+                                    Colon colon = new Colon(nomColon);
+                                    try{
+                                        this.addColon(colon);
+                                        nbrcolons++;
+                                    }catch(ColonException e) {
+                                        throw new FichierException(e.getMessage()+" Ligne : "+ nbrligne);
+                                    }
+                                } else {
+                                    throw new ParamException("ERREUR : Le paramètre de colon n'est pas définit à la ligne :" + nbrligne);
+                                }
+                            } else {
+                                throw new SyntaxeException("ERREUR : Le fichier ne respecte pas l'ordre (colon; ressource; deteste; preference) à la ligne :" + nbrligne);
                             }
-                            this.ajoutListePref(nomColonL, stringBuilder.toString());
                             break;
-                    default :
-                        System.out.println("ERREUR DANS LA RECONNAISSANCE DE LA COMMANDE");
-                        break;
+
+                        case "ressource":
+                            if (r) {
+                                c = false;
+                                if (tok.hasMoreTokens()) {
+                                    String nomRessource = tok.nextToken();
+                                    Ressource ressource = new Ressource(nomRessource);
+                                    try{
+                                        this.addRessource(ressource);
+                                        nbrressources++;
+                                    }catch(RessourceException e) {
+                                        throw new FichierException(e.getMessage()+" Ligne : "+ nbrligne);
+                                    }
+                                } else {
+                                    throw new ParamException("ERREUR : Le paramètre de ressource n'est pas définit à la ligne :" + nbrligne);
+                                }
+                            } else {
+                                throw new SyntaxeException("ERREUR : Le fichier ne respecte pas l'ordre (colon; ressource; deteste; preference) à la ligne :" + nbrligne);
+                            }
+                            break;
+
+                        case "deteste":
+                            if (d) {
+                                c = false;
+                                r = false;
+                                if (tok.hasMoreTokens()) {
+                                    String nomColon1 = tok.nextToken();
+                                    if(tok.hasMoreTokens()){
+                                        String nomColon2 = tok.nextToken();
+                                        try{
+                                            this.ajoutRelation(nomColon1, nomColon2);
+                                        }catch(ColonException e){
+                                            throw new FichierException(e.getMessage()+" Ligne : "+ nbrligne);
+                                        }
+                                    }else{
+                                        throw new ParamException("ERREUR : Le paramètre de ressource n'est pas définit à la ligne :" + nbrligne);
+                                    }
+                                }else{
+                                    throw new ParamException("ERREUR : Le paramètre de ressource n'est pas définit à la ligne :" + nbrligne);
+                                }
+                            } else {
+                                throw new SyntaxeException("ERREUR : Le fichier ne respecte pas l'ordre (colon; ressource; deteste; preference) à la ligne :" + nbrligne);
+                            }
+                            break;
+
+                        case "preferences":
+                            c = false;
+                            r = false;
+                            d = false;
+                            String nomColonL = tok.nextToken();
+                            StringBuilder stringBuilder = new StringBuilder();
+                            int i = 0;
+                            while (tok.hasMoreTokens()) {
+                                String nomPref = tok.nextToken();
+                                stringBuilder.append(nomPref + " ");
+                                i++;
+                            }
+                            if (i == nbrressources) {
+                                try{
+                                    this.ajoutListePref(nomColonL, stringBuilder.toString());
+                                }catch(ColonException | RessourceException e){
+                                    throw new FichierException(e.getMessage()+" Ligne : "+ nbrligne);
+                                }
+
+                            } else {
+                                throw new ParamException("ERREUR : Il n'y a pas le bon nombre de paramètre à la ligne :" + nbrligne);
+                            }
+                            break;
+
+                        default:
+                            throw new SyntaxeException("ERREUR DANS LA RECONNAISSANCE DE LA COMMANDE");
+                    }
+                    nbrligne++;
+
+                }else{
+                    throw new SyntaxeException("ERREUR : Une ligne du fichier ne se finit pas par un point");
                 }
             }
-        }catch (IOException e){
-            System.out.println(e.getMessage());
-            try{
-                Colonie colonie = new Colonie(nom);
-                colonie.menu1();
-            } catch (InputMismatchException IME) {
-                System.out.println(IME.getMessage());
+            if (nbrcolons != nbrressources) {
+                throw new NbrColonPasEgaleNbrRessourceException("ERREUR : Il n'y a pas le même nombre de ressources que de colons");
+            }
+            if (!verificationListePref()) {
+                throw new EnsembleListPreferenceColonieIncompleteException("ERREUR : il n'y a pas le même nombre de colon que de ressources");
             }
         }
     }
@@ -186,7 +266,7 @@ public class Colonie {
         try{
             this.init();
         }catch (InputMismatchException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         int choix = -1;
 
@@ -203,24 +283,31 @@ public class Colonie {
                         String nomColon1 = sc.next();
                         System.out.println("Entrez le nom du colon 2 ?");
                         String nomColon2 = sc.next();
-                        this.ajoutRelation(nomColon1, nomColon2);
+                        try{
+                            this.ajoutRelation(nomColon1, nomColon2);
+                        } catch (ColonException e) {
+                            System.out.println(e.getMessage());
+                        }
                         this.afficherColonsPasAmis();
                         break;
 
                     case 2:
                         sc.nextLine();
-                        System.out.println("Entrez le nom du colon : ");
+                        System.out.println("Entrez le nom du colon :");
                         String nom = sc.nextLine();
-                        System.out.println("Entrez les noms des ressources, espacés entre eux : ");
+                        System.out.println("Entrez le nom des ressources, espacés entre eux :");
                         String ressource = sc.nextLine();
-                        this.ajoutListePref(nom, ressource);
+                        try{
+                            this.ajoutListePref(nom, ressource);
+                        } catch (ColonException | RessourceException e) {
+                            System.out.println(e.getMessage());
+                        }
+
                         this.afficherListePrefColons();
                         break;
 
                     case 3:
-                        if (!verificationListePref()) {
-                            menu1();
-                        } else {
+                        if (verificationListePref()) {
                             partageRessources();
                             menu2();
                         }
@@ -239,7 +326,7 @@ public class Colonie {
     }
 
     public void menu2(){
-        System.out.println("Récapitulatif des Colons et de leur Ressource:");
+        System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
         afficherObjets();
         int choix = -1;
         while(choix!=3){
@@ -256,8 +343,12 @@ public class Colonie {
                         String nomColon1 = sc.nextLine();
                         System.out.println("Entrez le nom du deuxième colon : ");
                         String nomColon2 = sc.nextLine();
-                        echangeRessource(nomColon1, nomColon2);
-                        System.out.println("Récapitulatif des Colons et de leur Ressource:");
+                        try{
+                            echangeRessource(nomColon1, nomColon2);
+                        }catch(ColonException e){
+                           System.out.println(e.getMessage());
+                        }
+                        System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
                         afficherObjets();
                         break;
 
@@ -297,8 +388,8 @@ public class Colonie {
                 switch(choix){
                     case 1:
                         System.out.println("Affectation des ressources de colonie :");
-                        resolutionAutomatique();
-                        this.afficherObjets();
+                        this.resolutionAutomatique();
+                        this.afficherJaloux();
                         break;
                     case 2 :
                         System.out.println("Vous avez choisit la sauvegarde ! ");
@@ -341,9 +432,9 @@ public class Colonie {
         }
     }
 
-    public void ajoutRelation(String nomColon1, String nomColon2) {
+    public void ajoutRelation(String nomColon1, String nomColon2) throws ColonException {
         if(nomColon1.equals(nomColon2)){
-            System.out.println("ERREUR : Vous ne pouvez pas lier le même colon.\nRedirection au menu !");
+            throw new SameColonException("ERREUR : Vous ne pouvez pas lier le même colon.");
         }
         else{
             Colon colon1 = null;
@@ -358,10 +449,10 @@ public class Colonie {
                 }
             }
             if (colon1==null || colon2==null){
-                System.out.println("ERREUR : Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
+                throw new ColonNonPresentDansColonieException("ERREUR : Un ou deux colons séléctionné ne sont pas présent dans la liste des colons");
             }else {
                 if (colon1.recherchePasAmis(colon2) || colon2.recherchePasAmis(colon1)) {
-                    System.out.println("ERREUR : Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement");
+                    throw new ColonDejaDansLaRelationException("ERREUR : Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement");
                 } else {
                     // Ajout dans colon1 & dans colon2 d'une relation 'pas amis'
                     colon1.addPasAmis(colon2);
@@ -382,7 +473,7 @@ public class Colonie {
         return false;
     }
 
-    public void ajoutListePref(String nom, String ressources) {
+    public void ajoutListePref(String nom, String ressources) throws ColonException, RessourceException {
         boolean contient = false;
         for(Colon colon : colons) {
             if(colon.getNom().equals(nom)){
@@ -391,20 +482,14 @@ public class Colonie {
             }
         }
         if(!contient) {
-            System.out.println("ERREUR : Le colon n'existe pas !");
-            System.out.println("Redirection vers le menu");
-            return;
+            throw new ColonNonPresentDansColonieException("ERREUR : Le colon n'existe pas !");
         }else{
             String[] res = ressources.split(" ");
 
             // Vérification de si il y'a toute la liste de préférence des ressources
             if(res.length != ressourcesColonie.size() ){
-                System.out.println("ERREUR : Le nombre de resource tapé n'est pas respecté !");
-                System.out.println("Vous avez rentré "+res.length+" ressources, au lieu de "+ ressourcesColonie.size()+" ressources.");
-                System.out.println("Redirection vers le menu");
-                return;
+                throw new RessourceManquanteException("ERREUR : Le nombre de resource tapé n'est pas respecté. Vous avez rentré "+res.length+" ressources. Nous avons besoin de "+ressourcesColonie.size()+" ressources.");
             }else{
-
                 StringTokenizer tok = new StringTokenizer(ressources," ");
                 List<Ressource> listePref = new ArrayList<Ressource>(ressourcesColonie.size());
 
@@ -414,17 +499,13 @@ public class Colonie {
                     if(this.ressourceInList(this.ressourcesColonie, chaine)){
                         Ressource r = new Ressource(chaine);
                         if(this.ressourceInList(listePref, chaine)){
-                            System.out.println("ERREUR : La ressource ne peut pas être ajouté !");
-                            System.out.println("Redirection vers le menu");
-                            return;
+                            throw new RessourceDoubleException("ERREUR : La ressource est en double dans la liste de préférence.");
                         }else{
                             listePref.add(r);
                         }
                     }
                     else{
-                        System.out.println("ERREUR : La ressource ne peut pas être ajouté !");
-                        System.out.println("Redirection vers le menu");
-                        return;
+                        throw new RessourcePasDansColonieException("ERREUR : La ressource n'existe pas !");
                     }
                 }
                 this.getColon(nom).setPreferencesRessource(listePref);
@@ -477,9 +558,9 @@ public class Colonie {
         }
     }
 
-    public void echangeRessource(String nomColon1, String nomColon2){
+    public void echangeRessource(String nomColon1, String nomColon2) throws ColonException {
         if(nomColon2.equals(nomColon1)) {
-            System.out.println("ERREUR : On peut pas échanger les ressources d'un même colon.\nRedirection au menu !");
+            throw new SameColonException("ERREUR : On peut pas échanger les ressources d'un même colon.");
         }
         else{
             Colon colon1 = null;
@@ -496,7 +577,7 @@ public class Colonie {
             }
 
             if(colon1 == null || colon2 == null) {
-                System.out.println("ERREUR : Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
+                throw new ColonNonPresentDansColonieException("ERREUR : Un ou deux colons séléctionnés ne sont pas présent dans la liste des colons");
             }
             else {
                 // Échange des ressources entre les deux colons
@@ -505,8 +586,6 @@ public class Colonie {
                 colon2.setRessource(aux);
                 colon1.setPosRessource(colon1.getPosRessource());
                 colon2.setPosRessource(colon2.getPosRessource());
-                System.out.println("Les ressources entre le colon "+ nomColon1 +" et le colon "+ nomColon2 +" on était échange");
-
             }
 
         }
@@ -547,7 +626,7 @@ public class Colonie {
         }
         calculAffectation();
         System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
-        System.out.println("Récapitulatif des Colons et de leur Ressource: ");
+        System.out.println("Récapitulatif des Colons et de leur code.Ressource: ");
         afficherObjets();
     }
 
@@ -563,7 +642,7 @@ public class Colonie {
     }
 
     public void afficherListePrefColons(){
-        System.out.println("Récapitulatif de préférence de chaque Colon : ");
+        System.out.println("Récapitulatif de préférence de chaque code.Colon : ");
         for(Colon c : colons){
             System.out.print("  "+c.getNom()+" : ");
             for(Ressource r : c.getPreferencesRessource()){
@@ -593,6 +672,14 @@ public class Colonie {
         }
         return -1;
     }
+    public void addRessource(Ressource ressource)throws RessourceException{
+        for(Ressource r1 : this.ressourcesColonie){
+            if(r1.getNomRessource().equals(ressource.getNomRessource())){
+                throw new RessourceDejaDansColonieException("ERREUR : La ressource est déjà dans la colonie");
+            }
+        }
+        this.ressourcesColonie.add(ressource);
+    }
 
     public Colon getColon(String nom){
         for(Colon c : this.colons){
@@ -607,6 +694,14 @@ public class Colonie {
     }
     public void setColons(List<Colon> colons) {
         this.colons = colons;
+    }
+    public void addColon(Colon c) throws ColonException {
+        for(Colon c1 : this.colons){
+            if(c1.equals(c)){
+                throw new ColonDejaDansColonieException("ERREUR : Le colon est déjà dans la colonie");
+            }
+        }
+        this.colons.add(c);
     }
 
     public int getAffectation() {

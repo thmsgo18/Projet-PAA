@@ -1,0 +1,13 @@
+colon(A).
+colon(B).
+colon(C).
+ressource(1).
+ressource(2).
+ressource(3).
+ressource(4)
+deteste(A,B).
+deteste(C,B).
+preferences(A,1,2,3,4).
+preferences(B,1,3,2,4).
+preferences(C,3,2,1,4).
+preferences(D,4,2,1,3).

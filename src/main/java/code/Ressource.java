@@ -1,3 +1,5 @@
+package code;
+
 public class Ressource{
     private String nomRessource;
     private boolean disponible;
