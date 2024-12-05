@@ -1,7 +1,6 @@
 package code;
 
-import code.exception.ColonieException;
-import code.exception.FichierException;
+import code.exception.*;
 
 
 import java.io.IOException;
@@ -13,13 +12,25 @@ public class Main {
         System.out.println("Entrez le nom de la colonie : ");
         String nom = sc.nextLine();
 
-        String cheminFichier = "src/main/fichierTXT/config_error2.txt";
+        String cheminFichier = "src/main/fichierTXT/config_error14.txt";
         Colonie colonie = new Colonie(nom);
 
         try{
             colonie.init2(cheminFichier);
             colonie.menuSolutionAuto();
-        }catch(FichierException | ColonieException e){
+        }catch(ParamException |
+               SyntaxeException |
+               ColonDejaDansColonieException |
+               RessourceDejaDansColonieException |
+               MemeColonException |
+               ColonNonPresentDansColonieException |
+               ColonDejaDansLaRelationException |
+               RessourceManquanteException |
+               RessourceDoubleException |
+               RessourcePasDansColonieException |
+               NbrColonPasEgaleNbrRessourceException |
+               EnsembleListPreferenceColonieIncompleteException e)
+        {
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
         }catch(IOException e){
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());

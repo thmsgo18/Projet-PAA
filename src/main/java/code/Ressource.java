@@ -1,7 +1,7 @@
 package code;
 
 public class Ressource{
-    private String nomRessource;
+    private final String nomRessource;
     private boolean disponible;
 
     public Ressource(String nomRessource){
@@ -12,9 +12,7 @@ public class Ressource{
     public String getNomRessource(){
         return nomRessource;
     }
-    public void setNomRessource(String nomRessource){
-        this.nomRessource = nomRessource;
-    }
+
 
     public boolean getDisponibilite(){
         return disponible;

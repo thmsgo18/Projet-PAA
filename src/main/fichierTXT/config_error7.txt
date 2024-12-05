@@ -1,11 +1,11 @@
-colo(A)
+colon(A)
 colon(B).
 colon(C).
 colon(D).
 ressource(1).
 ressource(2).
 ressource(3).
-ressource(4)
+ressource(4).
 deteste(A,B).
 deteste(C,B).
 preferences(A,1,2,3,4).
