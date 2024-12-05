@@ -38,7 +38,7 @@ public class Colonie {
                 try{
                     this.addColon(colon);
                 } catch (ColonException e) {
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                 }
 
                 System.out.println("Entrez le nom de la ressource"+(i+1)+" :");
@@ -47,7 +47,7 @@ public class Colonie {
                 try{
                     this.addRessource(ressource);
                 }catch(RessourceException e) {
-                    System.out.println(e.getMessage());
+                    System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                 }
 
             }
@@ -74,7 +74,7 @@ public class Colonie {
         boolean d = true ;
         int nbrcolons = 0;
         int nbrressources = 0;
-        int nbrligne = 0;
+        int nbrligne = 1;
         File file = new File(cheminFichier);
         if(!file.exists()){
             throw new IOException();
@@ -176,7 +176,7 @@ public class Colonie {
                             break;
 
                         default:
-                            throw new SyntaxeException("ERREUR DANS LA RECONNAISSANCE DE LA COMMANDE");
+                            throw new SyntaxeException("ERREUR DANS LA RECONNAISSANCE DE LA COMMANDE à la ligne :" + nbrligne);
                     }
                     nbrligne++;
 
@@ -243,7 +243,7 @@ public class Colonie {
                 return false;
             }
         }catch(IOException e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
             return false;
         }
     }
@@ -257,7 +257,7 @@ public class Colonie {
                     writer.println(colon.getNom()+":"+colon.getRessource().getNomRessource());
                 }
             }catch(IOException e){
-                System.out.println(e.getMessage());
+                System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
             }
         }
     }
@@ -266,7 +266,7 @@ public class Colonie {
         try{
             this.init();
         }catch (InputMismatchException e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
         }
         int choix = -1;
 
@@ -286,7 +286,7 @@ public class Colonie {
                         try{
                             this.ajoutRelation(nomColon1, nomColon2);
                         } catch (ColonException e) {
-                            System.out.println(e.getMessage());
+                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
                         this.afficherColonsPasAmis();
                         break;
@@ -300,7 +300,7 @@ public class Colonie {
                         try{
                             this.ajoutListePref(nom, ressource);
                         } catch (ColonException | RessourceException e) {
-                            System.out.println(e.getMessage());
+                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
 
                         this.afficherListePrefColons();
@@ -346,7 +346,7 @@ public class Colonie {
                         try{
                             echangeRessource(nomColon1, nomColon2);
                         }catch(ColonException e){
-                           System.out.println(e.getMessage());
+                           System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
                         System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
                         afficherObjets();
