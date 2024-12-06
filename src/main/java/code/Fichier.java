@@ -5,8 +5,29 @@ import code.exception.*;
 import java.io.*;
 import java.util.StringTokenizer;
 
+/**
+ * Cette classe, contenant que des méthodes static, permet de gérer la partie fichier du programme
+ */
 public class Fichier {
-
+    /**
+     * Cette méthode static permet de créer une colonie à partir d'un fichier texte.
+     *
+     * @param cheminFichier de type String permettant d'avoir le chemin du fichier texte à partir duquel nous allons construire la colonie.
+     * @param colonie de type Colonie.
+     * @throws IOException pour les erreurs d'accès au fichier.
+     * @throws ParamException pour les erreurs au niveau des paramètres des commandes dans le fichier.
+     * @throws SyntaxeException pour les erreurs de syntaxe dans le fichier.
+     * @throws ColonDejaDansColonieException pour le cas où nous voulons ajouter un colon déjà présent dans la colonie.
+     * @throws RessourceDejaDansColonieException pour le cas où nous voulons ajouter une ressource déjà présente dans la colonie.
+     * @throws MemeColonException pour le cas où nous voulons créer une relation 'se déteste' entre deux fois le même colon.
+     * @throws ColonNonPresentDansColonieException pour le cas où le colon n'est pas présent dans la colonie.
+     * @throws ColonDejaDansLaRelationException pour le cas où la relation existe déjà entre deux colons.
+     * @throws RessourceManquanteException pour le cas où il manque une ou plusieurs ressources dans la liste de préférence d'un colon.
+     * @throws RessourceDoubleException pour le cas où une ressource est écrite plusieurs fois dans la liste de préférence d'un colon.
+     * @throws RessourcePasDansColonieException pour le cas où la ressource n'est pas dans la colonie.
+     * @throws NbrColonPasEgaleNbrRessourceException pour le cas où il n'y a pas le même nombre de colons que de ressources.
+     * @throws EnsembleListPreferenceColonieIncompleteException pour le cas où un ou plusieurs colons n'ont pas leur liste de préférences renseignée.
+     */
     public static void init2(String cheminFichier, Colonie colonie)throws IOException,
             ParamException,
             SyntaxeException,
@@ -21,7 +42,6 @@ public class Fichier {
             NbrColonPasEgaleNbrRessourceException,
             EnsembleListPreferenceColonieIncompleteException
     {
-        // Initialisation de la colonie
         boolean c =true;
         boolean r =true;
         boolean d = true ;
@@ -156,6 +176,13 @@ public class Fichier {
         }
     }
 
+    /**
+     * Cette méthode static permet de sauvegarder l'état de la colonie.
+     *
+     * @param chemin de type String permettant de créer/modifier le fichier texte dans lequel nous sauvegarderons.
+     * @param colonie de type Colonie.
+     * @throws FichierException pour le cas où le fichier de sauvegarde et de configuration est le même
+     */
     public static void sauvegarde(String chemin, Colonie colonie)throws FichierException{
         if(chemin.equals(colonie.getCheminFichierConf())){
             throw new FichierException("ERREUR : Le fichier est le meme que pour le fichier de configuration.");

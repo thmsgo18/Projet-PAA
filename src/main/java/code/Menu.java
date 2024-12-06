@@ -4,8 +4,18 @@ import code.exception.*;
 
 import java.util.InputMismatchException;
 
+/**
+ * Cette classe, contenant que des méthodes static, répertorie les différents menus du programme.
+ */
 public class Menu {
-
+    /**
+     * Cette méthode static permettra de :
+     *      1 : Ajouter une relation 'ne s'aiment pas' entre deux colons.
+     *      2 : Ajouter une liste de préférences à un colon.
+     *      3 : Passager au menu 2.
+     *
+     * @param colonie de type Colonie.
+     */
     public static void menu1(Colonie colonie) {
         colonie.init();
 
@@ -55,7 +65,7 @@ public class Menu {
                             Algo.algoNaif(colonie);
                             Menu.menu2(colonie);
                         }else{
-
+                            choix=-1;
                         }
                         break;
 
@@ -64,14 +74,22 @@ public class Menu {
                         break;
                 }
             } catch (InputMismatchException e) {
-                // La valeur saisie n'est pas un int
                 e.getMessage();
                 colonie.getSc().next();
             }
         }
     }
 
+    /**
+     * Cette méthode static permettra de :
+     *      1 : Échanger les ressources de 2 colons.
+     *      2 : Afficher le nombre de jaloux.
+     *      3 : Terminer le programme.
+     *
+     * @param colonie de type Colonie.
+     */
     public static void menu2(Colonie colonie) {
+
         System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
         colonie.afficherObjets();
         int choix = -1;
@@ -110,7 +128,6 @@ public class Menu {
                         break;
                 }
             } catch (InputMismatchException e) {
-                // La valeur saisie n'est pas un int
                 System.out.println("La valeur entrée n'est pas un entier !");
                 colonie.getSc().next();
             }
@@ -118,14 +135,23 @@ public class Menu {
         }
     }
 
-    public static void menuSolutionAuto(Colonie colonie) throws InputMismatchException {
+    /**
+     * (Dans le cas de l'utilisation d'un fichier de configuration de la colonie)
+     * Cette méthode static permettra de :
+     *      1 : Réaliser une affectation automatique des ressources aux colons.
+     *      2 : Sauvegarder la colonie actuelle.
+     *      3 : Terminer le programme.
+     *
+     * @param colonie de type Colonie
+     */
+    public static void menuSolutionAuto(Colonie colonie){
         int choix = -1;
         colonie.afficherColonsPasAmis();
         colonie.afficherListePrefColons();
         while(choix!=3){
             System.out.println("Menu solution auto que voulez-vous faire : ");
             System.out.println("        1 : Résolution automatique");
-            System.out.println("        2 : sauvegarder la solution actuelle");
+            System.out.println("        2 : Sauvegarder la solution actuelle");
             System.out.println("        3 : Fin");
             try{
                 System.out.println("Quelle est votre choix ?");
@@ -153,8 +179,9 @@ public class Menu {
                     case 3 :
                         System.out.println("Fin du programme !");
                         break;
-                    default:
 
+                    default:
+                        break;
                 }
 
             }catch(InputMismatchException e){
