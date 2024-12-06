@@ -5,6 +5,7 @@ import code.exception.*;
 import java.io.*;
 import java.util.*;
 
+
 public class Colonie {
     private String nom;
     private List<Ressource> ressourcesColonie;
@@ -76,7 +77,7 @@ public class Colonie {
         System.out.println();
     }
 
-    public void resolutionAutomatique(){
+    /*public void resolutionAutomatique(){
         int i = 0;
         int fin = this.colons.get(0).getPreferencesRessource().size();
         while(i<fin){
@@ -92,7 +93,7 @@ public class Colonie {
             }
             i++;
         }
-    }
+    }*/
 
     public void ajoutRelation(String nomColon1, String nomColon2) throws MemeColonException,
             ColonNonPresentDansColonieException,
@@ -204,7 +205,7 @@ public class Colonie {
         }
     }
 
-    public void partageRessources(){
+    /*public void partageRessources(){
         for (Colon colon : colons) {
             // Parcours de tous les colons de la colonie
             int j = 0;
@@ -224,7 +225,7 @@ public class Colonie {
                 }
             }
         }
-    }
+    }*/
 
     public void echangeRessource(String nomColon1, String nomColon2) throws MemeColonException, ColonNonPresentDansColonieException {
         if(nomColon2.equals(nomColon1)) {
@@ -260,7 +261,7 @@ public class Colonie {
 
     }
 
-    public void calculAffectation(){
+    /*public void calculAffectation(){
         int res = 0;
         boolean jaloux;
         for(Colon c  : colons) {
@@ -281,7 +282,7 @@ public class Colonie {
             }
         }
         this.affectation = res;
-    }
+    }*/
 
     public void afficherJaloux(){
         System.out.println("Liste des préférences de chaque colon : ");
@@ -292,7 +293,7 @@ public class Colonie {
             }
             System.out.print("\n");
         }
-        calculAffectation();
+        Algo.calculAffectation(this);
         System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
         System.out.println("Récapitulatif des Colons et de leur code.Ressource: ");
         afficherObjets();
