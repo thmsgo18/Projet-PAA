@@ -4,6 +4,7 @@ import code.exception.*;
 
 
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -12,12 +13,12 @@ public class Main {
         System.out.println("Entrez le nom de la colonie : ");
         String nom = sc.nextLine();
 
-        String cheminFichier = "src/main/fichierTXT/config_error14.txt";
+        String cheminFichier = "/main/fichierTXT/config_error14.txt";
         Colonie colonie = new Colonie(nom);
 
         try{
-            colonie.init2(cheminFichier);
-            colonie.menuSolutionAuto();
+            Fichier.init2(cheminFichier, colonie);
+            Menu.menuSolutionAuto(colonie);
         }catch(ParamException |
                SyntaxeException |
                ColonDejaDansColonieException |
@@ -34,7 +35,10 @@ public class Main {
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
         }catch(IOException e){
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
-            colonie.menu1();
+            Menu.menu1(colonie);
         }
+
+
+
     }
 }
