@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Algo {
     public static void algoNaif(Colonie c){
+        System.out.println("salut");
 
         System.out.println("***********************Debut de l'algorihtme naïf***********************");
         int i = 0;
