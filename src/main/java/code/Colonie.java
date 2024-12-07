@@ -77,23 +77,6 @@ public class Colonie {
         System.out.println();
     }
 
-    /*public void resolutionAutomatique(){
-        int i = 0;
-        int fin = this.colons.get(0).getPreferencesRessource().size();
-        while(i<fin){
-            for(Colon c :this.colons){
-                for(Ressource r : ressourcesColonie){
-                    if((r.equals(c.getPreferencesRessource().get(i))&&r.getDisponibilite()&& !(c.isAttribue()))){
-                        r.setDisponibilite(false);
-                        c.setRessource(r);
-                        c.setAttribue(true);
-                        c.setPosRessource(i);
-                    }
-                }
-            }
-            i++;
-        }
-    }*/
 
     public void ajoutRelation(String nomColon1, String nomColon2) throws MemeColonException,
             ColonNonPresentDansColonieException,
@@ -205,27 +188,61 @@ public class Colonie {
         }
     }
 
-    /*public void partageRessources(){
-        for (Colon colon : colons) {
-            // Parcours de tous les colons de la colonie
-            int j = 0;
-            while (!colon.isAttribue()) {
-                // Tant que le colon n'a pas de ressource attribuée
-                int pos = getPositionRessource(colon.getUnePreferenceRessource(j));
-                if (this.ressourcesColonie.get(pos).getDisponibilite()) {
-                    // La ressource est disponible.
-                    colon.setRessource(this.ressourcesColonie.get(pos));
-                    this.ressourcesColonie.get(pos).setDisponibilite(false);
-                    colon.setAttribue(true);
-                    colon.setPosRessource(j);
-                } else {
-                    // La ressource n'est pas disponible
-                    // Passage à la ressource préférée suivante
-                    j++;
+    public void trieListRessource(){
+        boolean echange;
+        this.calculePointRessource();
+        do {
+            echange = false;
+            for (int i = 0; i < this.ressourcesColonie.size() - 1; i++) {
+                Ressource r1 = this.ressourcesColonie.get(i);
+                Ressource r2 = this.ressourcesColonie.get(i + 1);
+
+                // Comparaison des priorités
+                if (r2.getPoint() > r1.getPoint()) {
+                    // Echange des ressources
+                    this.ressourcesColonie.set(i, r2);
+                    this.ressourcesColonie.set(i + 1, r1);
+                    echange = true;
+                }
+            }
+            // Tant qu'un échange a eu lieu, on continue
+        } while (echange);
+    }
+
+    public void trieListColon(){
+        boolean echange;
+        do {
+            echange = false;
+            for (int i = 0; i < this.colons.size() - 1; i++) {
+                Colon c1 = this.colons.get(i);
+                Colon c2 = this.colons.get(i + 1);
+
+                // Comparaison des priorités
+                if (c2.getPasAmis().size() > c1.getPasAmis().size()) {
+                    // Echange des colons
+                    this.colons.set(i, c2);
+                    this.colons.set(i + 1, c1);
+                    echange = true;
+                }
+            }
+            // Tant qu'un échange a eu lieu, on continue
+        } while (echange);
+
+    }
+
+    private void calculePointRessource(){
+        for (Colon colon : this.colons) {
+            List<Ressource> listeRes = colon.getPreferencesRessource();
+            for(int i = 0; i < listeRes.size(); i++){
+                for(Ressource r : this.ressourcesColonie){
+                    if(listeRes.get(i).equals(r)){
+                        r.setPoint(r.getPoint()+(listeRes.size()-i));
+                    }
                 }
             }
         }
-    }*/
+    }
+
 
     public void echangeRessource(String nomColon1, String nomColon2) throws MemeColonException, ColonNonPresentDansColonieException {
         if(nomColon2.equals(nomColon1)) {
@@ -260,29 +277,6 @@ public class Colonie {
         }
 
     }
-
-    /*public void calculAffectation(){
-        int res = 0;
-        boolean jaloux;
-        for(Colon c  : colons) {
-            // Parcours de tous les colons de la colonie
-            jaloux = false;
-            List<Colon> pasAmis = c.getPasAmis();
-            for(Colon c1 : pasAmis){
-                for(int i = 0; i<c.getPosRessource();i++) {
-                    if (c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
-                        // Jalousie de c1
-                        jaloux = true;
-                    }
-                }
-            }
-            if(jaloux){
-                // Incrémentation du nombre de jaloux
-                res++;
-            }
-        }
-        this.affectation = res;
-    }*/
 
     public void afficherJaloux(){
         System.out.println("Liste des préférences de chaque colon : ");

@@ -1,6 +1,5 @@
 package code;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class Algo {
@@ -36,6 +35,15 @@ public class Algo {
         }
 
 
+    }
+
+
+    public static void algoNaif2(Colonie colonie){
+        colonie.trieListRessource();
+        colonie.trieListColon();
+        for(int i=0;i<colonie.getColons().size();i++){
+            colonie.getColons().get(i).setRessource(colonie.getRessources().get(colonie.getRessources().size() - (1+i)));
+        }
     }
 
     public static void calculAffectation(Colonie colonie){

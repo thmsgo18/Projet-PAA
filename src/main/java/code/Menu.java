@@ -62,7 +62,8 @@ public class Menu {
 
                     case 3:
                         if (colonie.verificationListePref()) {
-                            Algo.algoNaif(colonie);
+                            //Algo.algoNaif(colonie);
+                            Algo.algoNaif2(colonie);
                             Menu.menu2(colonie);
                         }else{
                             choix=-1;
