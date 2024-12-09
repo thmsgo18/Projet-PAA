@@ -1,7 +1,6 @@
 package code;
 
 import code.exception.*;
-
 import java.util.InputMismatchException;
 
 /**
@@ -63,7 +62,7 @@ public class Menu {
                     case 3:
                         if (colonie.verificationListePref()) {
                             //Algo.algoNaif(colonie);
-                            Algo.algoNaif2(colonie);
+                            Algo.algoNaif(colonie);
                             Menu.menu2(colonie);
                         }else{
                             choix=-1;
@@ -162,7 +161,7 @@ public class Menu {
                     case 1:
                         System.out.println("Affectation des ressources de colonie :");
                         int k =7;
-                        Algo.resolutionAutomatique(colonie,k);
+                        Algo.resolutionAutomatique2(colonie);
                         colonie.afficherJaloux();
                         break;
                     case 2 :

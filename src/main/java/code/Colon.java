@@ -3,6 +3,10 @@ package code;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Cette classe permet de représenter un colon de la colonie.
+ *
+ */
 public class Colon {
     private final String nom;
     private List<Ressource> preferencesRessource;
@@ -11,6 +15,11 @@ public class Colon {
     private int posRessource;
     private boolean attribue;
 
+    /**
+     * Le constructeur de l'object Colon.
+     *
+     * @param nom de type String du colon.
+     */
     public Colon(String nom) {
         this.nom = nom;
         this.preferencesRessource = new ArrayList<>();

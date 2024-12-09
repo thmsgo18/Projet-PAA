@@ -2,7 +2,6 @@ package code;
 
 import code.exception.*;
 
-import java.io.*;
 import java.util.*;
 
 
@@ -198,7 +197,7 @@ public class Colonie {
                 Ressource r2 = this.ressourcesColonie.get(i + 1);
 
                 // Comparaison des priorités
-                if (r2.getPoint() > r1.getPoint()) {
+                if (r2.getPopularite() > r1.getPopularite()) {
                     // Echange des ressources
                     this.ressourcesColonie.set(i, r2);
                     this.ressourcesColonie.set(i + 1, r1);
@@ -236,7 +235,7 @@ public class Colonie {
             for(int i = 0; i < listeRes.size(); i++){
                 for(Ressource r : this.ressourcesColonie){
                     if(listeRes.get(i).equals(r)){
-                        r.setPoint(r.getPoint()+(listeRes.size()-i));
+                        r.setPopularite(r.getPopularite()+(listeRes.size()-i));
                     }
                 }
             }
