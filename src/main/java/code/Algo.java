@@ -4,9 +4,6 @@ import java.util.List;
 
 public class Algo {
     public static void algoNaif(Colonie c){
-        System.out.println("salut");
-
-        System.out.println("***********************Debut de l'algorihtme naïf***********************");
         int i = 0;
         int fin = c.getColons().get(i).getPreferencesRessource().size();
         while(i<fin){
@@ -24,8 +21,6 @@ public class Algo {
             i++;
         }
 
-        System.out.println("***********************Fin de l'algorihtme naïf***********************");
-
     }
 
     public static void resolutionAutomatique(Colonie colonie,int k){
@@ -36,6 +31,36 @@ public class Algo {
         }
 
 
+    }
+
+    public static void testEchange(Colon colon, Colonie colonie, int affectation){
+        int affect = affectation;
+        for(Colon c : colon.getPasAmis()){
+            try{
+                colonie.echangeRessource(c.getNom(), colon.getNom());
+                calculAffectation(colonie);
+                if(colonie.getAffectation()>affect){
+                    colonie.echangeRessource(colon.getNom(), c.getNom());
+                    calculAffectation(colonie);
+                }else{
+                    affect=colonie.getAffectation();
+                }
+            }catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public static void resolutionAutomatique2(Colonie colonie){
+        algoNaif(colonie);
+        colonie.trieListColon();
+        calculAffectation(colonie);
+        for(Colon colon :colonie.getColons()){
+            int affectation = colonie.getAffectation();
+            System.out.println("Le nombre d'affectation au départ est de :"+ affectation);
+            testEchange(colon,colonie,affectation);
+        }
+        System.out.println("Le nombre d'affectation à la fin est de :"+ colonie.getAffectation());
     }
 
 
