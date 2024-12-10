@@ -62,7 +62,7 @@ public class Menu {
                     case 3:
                         if (colonie.verificationListePref()) {
                             //Algo.algoNaif(colonie);
-                            Algo.algoNaif(colonie);
+                            Algo.SolutionNaif(colonie);
                             Menu.menu2(colonie);
                         }else{
                             choix=-1;
@@ -161,7 +161,11 @@ public class Menu {
                     case 1:
                         System.out.println("Affectation des ressources de colonie :");
                         int k =7;
-                        Algo.resolutionAutomatique2(colonie);
+                        try{
+                            Algo.RecuitSimule(colonie,k);
+                        }catch(Exception e){
+                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                        }
                         colonie.afficherJaloux();
                         break;
                     case 2 :

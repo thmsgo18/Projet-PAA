@@ -13,7 +13,7 @@ public class Main {
         System.out.println("Entrez le nom de la colonie : ");
         String nom = sc.nextLine();
 
-        String cheminFichier = "/main/fichierTXT/config_error14.txt";
+        String cheminFichier = "src/main/fichierTXT/Colonie30.txt";
         Colonie colonie = new Colonie(nom);
 
         try{
