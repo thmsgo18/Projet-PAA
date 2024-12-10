@@ -1,97 +1,153 @@
 package code;
 
+import code.exception.ColonNonPresentDansColonieException;
+import code.exception.MemeColonException;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Algo {
-    public static void algoNaif(Colonie c){
+
+
+    private static LinkedHashMap<Colon,Ressource> meilleurSolution;
+    private static int meilleurCout;
+
+    public static void SolutionNaif(Colonie c){
+        System.out.println("salut");
+        System.out.println("***********************Debut de l'algorithme naïf***********************");
         int i = 0;
         int fin = c.getColons().get(i).getPreferencesRessource().size();
         while(i<fin){
-            for(Colon colon :c.getColons()){
+            for(Colon colon : c.getColons()){
                 for(Ressource r : c.getRessources()){
-                    if((r.equals(colon.getPreferencesRessource().get(i))&&r.getDisponibilite()&& !(colon.isAttribue()))){
+                    if((r.equals(colon.getPreferencesRessource().get(i)) && r.getDisponibilite() && !(colon.isAttribue()))){
                         r.setDisponibilite(false);
                         colon.setRessource(r);
                         colon.setAttribue(true);
                         colon.setPosRessource(i);
-                        System.out.println("Position de la ressource attribué à "+colon.getNom()+" : "+colon.getPosRessource());
+                        System.out.println("Position de la ressource attribuée à "+colon.getNom()+" : "+colon.getPosRessource());
                     }
                 }
             }
             i++;
         }
-
-    }
-
-    public static void resolutionAutomatique(Colonie colonie,int k){
-        algoNaif(colonie);
-        int i = 0;
-        while(i<k){
-
-        }
-
-
-    }
-
-    public static void testEchange(Colon colon, Colonie colonie, int affectation){
-        int affect = affectation;
-        for(Colon c : colon.getPasAmis()){
-            try{
-                colonie.echangeRessource(c.getNom(), colon.getNom());
-                calculAffectation(colonie);
-                if(colonie.getAffectation()>affect){
-                    colonie.echangeRessource(colon.getNom(), c.getNom());
-                    calculAffectation(colonie);
-                }else{
-                    affect=colonie.getAffectation();
-                }
-            }catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    public static void resolutionAutomatique2(Colonie colonie){
-        algoNaif(colonie);
-        colonie.trieListColon();
-        calculAffectation(colonie);
-        for(Colon colon :colonie.getColons()){
-            int affectation = colonie.getAffectation();
-            System.out.println("Le nombre d'affectation au départ est de :"+ affectation);
-            testEchange(colon,colonie,affectation);
-        }
-        System.out.println("Le nombre d'affectation à la fin est de :"+ colonie.getAffectation());
+        System.out.println("***********************Fin de l'algorihtme naïf***********************");
     }
 
 
-    public static void algoNaif2(Colonie colonie){
-        colonie.trieListRessource();
-        colonie.trieListColon();
-        for(int i=0;i<colonie.getColons().size();i++){
-            colonie.getColons().get(i).setRessource(colonie.getRessources().get(colonie.getRessources().size() - (1+i)));
-        }
-    }
 
-    public static void calculAffectation(Colonie colonie){
+    public static int calculAffectation(Colonie colonie){
         int res = 0;
         boolean jaloux;
         for(Colon c  : colonie.getColons()) {
-            // Parcours de tous les colons de la colonie
             jaloux = false;
             List<Colon> pasAmis = c.getPasAmis();
             for(Colon c1 : pasAmis){
+                // On vérifie si c préfère la ressource de c1 à la sienne
+                // Ici, vous utilisiez getPosRessource() et la liste de préférences.
+                // Assurez-vous que c.getPosRessource() est correctement mis à jour.
+                // On peut vérifier la préférence en utilisant directement l'ordre dans preferences.
                 for(int i = 0; i<c.getPosRessource();i++) {
-                    if (c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
-                        // Jalousie de c1
+                    if (c1.getRessource()!=null && c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
                         jaloux = true;
                     }
                 }
             }
             if(jaloux){
-                // Incrémentation du nombre de jaloux
                 res++;
             }
         }
         colonie.setAffectation(res);
+        return res;
     }
+
+    public static void RecuitSimule(Colonie colonie, int k) throws ColonNonPresentDansColonieException, MemeColonException {
+        SolutionNaif(colonie);
+        int cout = calculAffectation(colonie);
+        LinkedHashMap<Colon, Ressource> solution = affectationCourant(colonie);
+        double temperature = 100.0;
+        double temperatureMin = 0.01;
+        double alpha = 0.95;
+        Random random = new Random();
+
+        meilleurCout = cout;
+        meilleurSolution = solution;
+
+        System.out.println("**************************Voici la meilleur affectation pour l'instant**************************");
+        afficheDico();
+        System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
+
+        while (temperature > temperatureMin) {
+            for (int i = 0; i < k; i++) {
+
+                int indColon1 = random.nextInt(colonie.getColons().size());
+                Colon c1 = colonie.getColons().get(indColon1);
+                List<Colon> pasAmis = c1.getPasAmis();
+                if (pasAmis.isEmpty()) continue;
+                Colon c2 = pasAmis.get(random.nextInt(pasAmis.size()));
+
+
+                colonie.echangeRessource(c1.getNom(), c2.getNom());
+                int nouveauCout = calculAffectation(colonie);
+
+                if (nouveauCout < cout) {
+                    // Accepter la nouvelle solution
+                    cout = nouveauCout;
+                    solution = affectationCourant(colonie);
+
+                    if (nouveauCout < meilleurCout) {
+                        meilleurCout = nouveauCout;
+                        meilleurSolution = solution;
+                        System.out.println("Nous allons garder cette solution");
+                    }
+                } else {
+                    // Accepter avec une probabilité
+                    int delta = nouveauCout - cout;
+                    double p = Math.exp(-delta / temperature);
+                    if (random.nextDouble() < p) {
+                        cout = nouveauCout;
+                        solution = affectationCourant(colonie);
+                    } else {
+                        System.out.println("nous allons annuler l'echange entre le colon "+c1.getNom()+" et le colon"+c2.getNom());
+                        colonie.echangeRessource(c2.getNom(), c1.getNom());
+                    }
+                }
+            }
+            // Réduire la température
+            temperature *= alpha;
+        }
+        System.out.println("Voici l'affectation final : ");
+        afficheDico();
+        System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
+       for (Colon colon : colonie.getColons()) {
+            //Attribué la meilleur solution à la colonie
+            colon.setRessource(meilleurSolution.get(colon));
+        }
+    }
+
+
+    private static LinkedHashMap<Colon,Ressource> affectationCourant(Colonie colonie){
+        LinkedHashMap<Colon,Ressource> affectCourant = new LinkedHashMap<>();
+        for(Colon c : colonie.getColons()){
+            affectCourant.put(c,c.getRessource());
+        }
+        return affectCourant;
+    }
+
+
+
+    private static void afficheDico(){
+        for(Colon c : meilleurSolution.keySet()){
+            System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource());
+        }
+    }
+
+    private static void afficheDico(LinkedHashMap<Colon,Ressource> solution){
+        for(Colon c :solution.keySet()){
+            System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource());
+        }
+    }
+
 }
