@@ -173,13 +173,14 @@ public class Fichier {
             if (!colonie.verificationListePref()) {
                 throw new EnsembleListPreferenceColonieIncompleteException("ERREUR : La liste de préférences pour chaque colons ne sont pas toutes définies");
             }
+            colonie.setCheminFichierConf(cheminFichier);
         }
     }
 
     /**
      * Cette méthode static permet de sauvegarder l'état de la colonie.
      *
-     * @param chemin de type String permettant de créer/modifier le fichier texte dans lequel nous sauvegarderons.
+     * @param chemin de type String indiquant le chemin et donc le nom du fichier texte dans lequel nous sauvegarderons.
      * @param colonie de type Colonie.
      * @throws FichierException pour le cas où le fichier de sauvegarde et de configuration est le même
      */

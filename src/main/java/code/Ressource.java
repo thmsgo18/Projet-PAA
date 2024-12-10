@@ -20,7 +20,7 @@ public class Ressource{
     }
 
     /**
-     * Geter du nom de la Ressource.
+     * Getter du nom de la Ressource.
      *
      * @return le nom de la Ressource de type String.
      */
@@ -29,7 +29,7 @@ public class Ressource{
     }
 
     /**
-     * Geter de la disponibilité de la Ressource
+     * Getter de la disponibilité de la Ressource
      *
      * @return de type booléen.
      */
@@ -38,7 +38,7 @@ public class Ressource{
     }
 
     /**
-     * Seter de la disponibilité de la Ressource.
+     * Setter de la disponibilité de la Ressource.
      *
      * @param disponible
      */
@@ -69,7 +69,7 @@ public class Ressource{
     }
 
     /**
-     * Seter de la popularité de la Ressource.
+     * Setter de la popularité de la Ressource.
      *
      * @param popularite de type int.
      */

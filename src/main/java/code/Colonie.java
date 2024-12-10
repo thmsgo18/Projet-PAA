@@ -4,7 +4,9 @@ import code.exception.*;
 
 import java.util.*;
 
-
+/**
+ * Cette classe permet bde représenter une Colonie
+ */
 public class Colonie {
     private String nom;
     private List<Ressource> ressourcesColonie;
@@ -13,6 +15,11 @@ public class Colonie {
     private final Scanner sc;
     private String cheminFichierConf;
 
+    /**
+     * Constructeur de l'object Colonie.
+     *
+     * @param nom de type String de la Colonie.
+     */
     public Colonie(String nom) {
         this.nom = nom;
         this.ressourcesColonie = new ArrayList<Ressource>(26);
@@ -22,6 +29,10 @@ public class Colonie {
         this.cheminFichierConf="";
     }
 
+    /**
+     * Cette méthode permet d'initialiser la Colonie.
+     * Création de n Colons et de n Ressources.
+     */
     public void init() {
         // Initialisation de la colonie
         Integer n = null;
@@ -76,7 +87,15 @@ public class Colonie {
         System.out.println();
     }
 
-
+    /**
+     * Cette méthode permet d'ajouter une relation 'pas amis' entre deux colons.
+     *
+     * @param nomColon1 de type String indiquant le nom du premier Colon.
+     * @param nomColon2 de type String indiquant le nom du deuxième Colon.
+     * @throws MemeColonException dans le cas où Colon1 est égale à Colon2.
+     * @throws ColonNonPresentDansColonieException dans le cas un où les deux Colons n'est/sont pas dans la Colonie.
+     * @throws ColonDejaDansLaRelationException dans le cas où il y a déjà une relation entre les deux Colons.
+     */
     public void ajoutRelation(String nomColon1, String nomColon2) throws MemeColonException,
             ColonNonPresentDansColonieException,
             ColonDejaDansLaRelationException {
@@ -109,6 +128,13 @@ public class Colonie {
         }
     }
 
+    /**
+     * Cette méthode permet de tester si une ressource est présente dans la liste des Ressources.
+     *
+     * @param l de type Liste de Ressources.
+     * @param nomRessource de type String indiquant le nom de la Ressource à chercher.
+     * @return de type booléen.
+     */
     private boolean ressourceInList(List<Ressource> l, String nomRessource) {
         for(Ressource ressource : l){
             // Parcours de la liste de ressources de la colonie
@@ -120,6 +146,16 @@ public class Colonie {
         return false;
     }
 
+    /**
+     * Cette méthode permet d'ajouter une liste de préférence à un Colon.
+     *
+     * @param nom de type String indiquant le nom du Colon.
+     * @param ressources de type String indiquant sous forme de chaine de caractères la liste de préférences des Ressources. Les Ressources sont espacées entre elles par un espace.
+     * @throws ColonNonPresentDansColonieException dans le cas un où les deux Colons n'est/sont pas dans la Colonie.
+     * @throws RessourceManquanteException dans le cas une où plusieurs Ressources n'est/sont pas dans la liste de préférence.
+     * @throws RessourceDoubleException dans le cas où une Ressource est présente deux fois dans la Colonie.
+     * @throws RessourcePasDansColonieException dans le cas une où plusieurs Ressources n'est/sont pas dans la Colonie.
+     */
     public void ajoutListePref(String nom, String ressources) throws ColonNonPresentDansColonieException,
             RessourceManquanteException,
             RessourceDoubleException,
@@ -164,6 +200,11 @@ public class Colonie {
         }
     }
 
+    /**
+     * Cette méthode permet de vérifier que les listes de préférences de tous les Colons sont renseignées.
+     *
+     * @return de type booléen.
+     */
     public boolean verificationListePref() {
         List<Colon> colonsIncomplets = new ArrayList<Colon>();
 
@@ -187,6 +228,9 @@ public class Colonie {
         }
     }
 
+    /**
+     * Cette méthode permet de trier la liste des Ressources de la Colonie par ordre de popularité.
+     */
     public void trieListRessource(){
         boolean echange;
         this.calculePointRessource();
@@ -208,6 +252,9 @@ public class Colonie {
         } while (echange);
     }
 
+    /**
+     * Cette méthode permet de trier la liste des Colons de la Colonie dans l'ordre décroissant par rapport au nombre de Colons détestés de chaque Colon.
+     */
     public void trieListColon(){
         boolean echange;
         do {
@@ -229,6 +276,9 @@ public class Colonie {
 
     }
 
+    /**
+     * Cette méthode permet de calculer la popularité de chaque Ressource.
+     */
     private void calculePointRessource(){
         for (Colon colon : this.colons) {
             List<Ressource> listeRes = colon.getPreferencesRessource();
@@ -242,7 +292,14 @@ public class Colonie {
         }
     }
 
-
+    /**
+     * Cette méthode permet d'échanger les Ressources entre dex Colons.
+     *
+     * @param nomColon1 de type String indiquant le nom du premier Colon.
+     * @param nomColon2 de type String indiquant le nom du deuxième Colon.
+     * @throws MemeColonException dans le cas où Colon1 est égale à Colon2.
+     * @throws ColonNonPresentDansColonieException dans le cas un où les deux Colons n'est/sont pas dans la Colonie.
+     */
     public void echangeRessource(String nomColon1, String nomColon2) throws MemeColonException, ColonNonPresentDansColonieException {
         if(nomColon2.equals(nomColon1)) {
             throw new MemeColonException("ERREUR : On peut pas échanger les ressources d'un même colon.");
@@ -277,21 +334,20 @@ public class Colonie {
 
     }
 
+    /**
+     * Cette méthode permet d'afficher la liste de préférences de chaque Colon, le nombre de jaloux et l'affectation des Ressources aux Colons.
+     */
     public void afficherJaloux(){
-        System.out.println("Liste des préférences de chaque colon : ");
-        for(Colon c : colons){
-            System.out.print(c.getNom()+" : ");
-            for(Ressource r : c.getPreferencesRessource()){
-                System.out.print(r.getNomRessource()+" ");
-            }
-            System.out.print("\n");
-        }
+        this.afficherListePrefColons();
         Algo.calculAffectation(this);
         System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
-        System.out.println("Récapitulatif des Colons et de leur code.Ressource: ");
+        System.out.println("Récapitulatif des colons et de leur ressource: ");
         afficherObjets();
     }
 
+    /**
+     * Cette méthode permet d'afficher la liste des colons et leur liste de Colons 'pas amis'.
+     */
     public void afficherColonsPasAmis(){
         System.out.println("Récapitulatif de chaque colon pas amis : ");
         for(Colon c : colons){
@@ -303,8 +359,11 @@ public class Colonie {
         }
     }
 
+    /**
+     * Cette méthode permet d'afficher la liste de préférences de chaque Colon.
+     */
     public void afficherListePrefColons(){
-        System.out.println("Récapitulatif de préférence de chaque code.Colon : ");
+        System.out.println("Récapitulatif de  la liste de préférence de chaque colon : ");
         for(Colon c : colons){
             System.out.print("  "+c.getNom()+" : ");
             for(Ressource r : c.getPreferencesRessource()){
@@ -314,13 +373,21 @@ public class Colonie {
         }
     }
 
+    /**
+     * Cette méthode affiche les Colons et leur Ressource.
+     */
     public void afficherObjets() {
         for(Colon c : colons) {
             System.out.println("    "+c.getNom() + ":" + c.getRessource().getNomRessource());
         }
     }
 
-
+    /**
+     * Cettye méthode permet de retourner la position d'une Ressource dans la liste des Ressources de la Colonie.
+     *
+     * @param ressource de type Ressource indiquant la Ressource à chercher.
+     * @return de type int indiquant la position de la liste.
+     */
     public int getPositionRessource(Ressource ressource){
         for(int i=0; i<ressourcesColonie.size(); i++){
             if(ressourcesColonie.get(i).equals(ressource)){
@@ -329,6 +396,13 @@ public class Colonie {
         }
         return -1;
     }
+
+    /**
+     * Cette méthode permet d'ajouter une Ressource à la liste des Ressources de la Colonie.
+     *
+     * @param ressource de type Ressource.
+     * @throws RessourceDejaDansColonieException dans le cas où la Ressource est déjà présente dans la Colonie.
+     */
     public void addRessource(Ressource ressource)throws RessourceDejaDansColonieException{
         for(Ressource r1 : this.ressourcesColonie){
             if(r1.getNomRessource().equals(ressource.getNomRessource())){
@@ -337,10 +411,22 @@ public class Colonie {
         }
         this.ressourcesColonie.add(ressource);
     }
+
+    /**
+     * Getter de la liste des Ressources de la Colonie.
+     *
+     * @return de type List de Ressource.
+     */
     public List <Ressource> getRessources(){
         return this.ressourcesColonie;
     }
 
+    /**
+     * Getter d'un Colon de la Colonie.
+     *
+     * @param nom de tupe String indiquant le nom du Colon de la Colonie à retourner.
+     * @return de type Colon.
+     */
     public Colon getColons(String nom){
         for(Colon c : this.colons){
             if(c.getNom().equals(nom)){
@@ -349,10 +435,21 @@ public class Colonie {
         }
         return null;
     }
+
+    /**
+     * Getter de la liste de Colons de la Colonie.
+     * @return de type List de Colon.
+     */
     public List<Colon> getColons() {
         return colons;
     }
 
+    /**
+     * Cette méthode permet d'ajouter un Colon à la Colonie.
+     *
+     * @param c de type Colon indiquant le Colon à ajouter.
+     * @throws ColonDejaDansColonieException dans le cas où le Colon est déjhà présent dans la Colonie.
+     */
     public void addColon(Colon c) throws ColonDejaDansColonieException {
         for(Colon c1 : this.colons){
             if(c1.equals(c)){
@@ -362,20 +459,47 @@ public class Colonie {
         this.colons.add(c);
     }
 
+    /**
+     * Getter du scanner de l'entrée clavier de la Colonie.
+     *
+     * @return de type Scanner.
+     */
     public Scanner getSc(){
         return sc;
     }
 
+    /**
+     * Getter du chemin du fichier de configuration de la Colonie.
+     *
+     * @return de type String.
+     */
     public String getCheminFichierConf() {
         return this.cheminFichierConf;
     }
+
+    /**
+     * Setter du chemin du fichier de configuration de la Colonie.
+     *
+     * @param cheminFichier de type String.
+     */
     public void setCheminFichierConf(String cheminFichier) {
         this.cheminFichierConf = cheminFichier;
     }
 
+    /**
+     * Setter du nombre de Jaloux dans la Colonie.
+     *
+     * @param affectation de type int.
+     */
     public void setAffectation(int affectation) {
         this.affectation = affectation;
     }
+
+    /**
+     * Getter du nombre de Colons jaloux dans la Colonie.
+     *
+     * @return de type int.
+     */
     public int getAffectation() {
         return affectation;
     }

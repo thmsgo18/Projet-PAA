@@ -18,7 +18,7 @@ public class Colon {
     /**
      * Le constructeur de l'object Colon.
      *
-     * @param nom de type String du colon.
+     * @param nom de type String du Colon.
      */
     public Colon(String nom) {
         this.nom = nom;
