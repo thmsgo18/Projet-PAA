@@ -115,20 +115,18 @@ public class Algo {
                 List<Colon> pasAmis = c1.getPasAmis();
                 if (pasAmis.isEmpty()) continue;
                 Colon c2 = pasAmis.get(random.nextInt(pasAmis.size()));
-
-
                 colonie.echangeRessource(c1.getNom(), c2.getNom());
                 int nouveauCout = calculAffectation(colonie);
 
-                if (nouveauCout < cout) {
+                if (nouveauCout <= cout) {
                     // Accepter la nouvelle solution
                     cout = nouveauCout;
                     solution = affectationCourant(colonie);
 
-                    if (nouveauCout < meilleurCout) {
+                    if (nouveauCout <= meilleurCout) {
                         meilleurCout = nouveauCout;
                         meilleurSolution = solution;
-                        System.out.println("Nous allons garder cette solution");
+
                     }
                 } else {
                     // Accepter avec une probabilité
@@ -137,8 +135,8 @@ public class Algo {
                     if (random.nextDouble() < p) {
                         cout = nouveauCout;
                         solution = affectationCourant(colonie);
+
                     } else {
-                        System.out.println("nous allons annuler l'echange entre le colon "+c1.getNom()+" et le colon"+c2.getNom());
                         colonie.echangeRessource(c2.getNom(), c1.getNom());
                     }
                 }
@@ -146,13 +144,19 @@ public class Algo {
             // Réduire la température
             temperature *= alpha;
         }
-        System.out.println("Voici l'affectation final : ");
+        System.out.println("Affichage avant affectation final :");
         afficheDico();
-        System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
-       for (Colon colon : colonie.getColons()) {
-            //Attribué la meilleur solution à la colonie
-            colon.setRessource(meilleurSolution.get(colon));
-        }
+        System.out.println("Le nombre de jaloux : "+meilleurCout);
+        System.out.println("Le nombre de jaloux : "+calculAffectation(colonie));
+        colonie.afficherObjets();
+
+        reaffectationNouvSolution(colonie);
+
+        System.out.println("Voici l'affectation final : ");
+        colonie.afficherObjets();
+        System.out.println("Le nombre de jaloux : "+meilleurCout);
+
+
     }
 
 
@@ -167,14 +171,36 @@ public class Algo {
 
     private static void afficheDico(){
         for(Colon c : meilleurSolution.keySet()){
-            System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource());
+            System.out.println(c.getNom()+" : "+meilleurSolution.get(c).getNomRessource());
         }
     }
 
-    private static void afficheDico(LinkedHashMap<Colon,Ressource> solution){
-        for(Colon c :solution.keySet()){
+    private static void afficheDico(LinkedHashMap<Colon,Ressource> sol){
+        for(Colon c :sol.keySet()){
             System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource());
         }
+
+
+        for (Colon c : meilleurSolution.keySet()) {
+            Ressource r = meilleurSolution.get(c);
+            c.setRessource(r);
+            c.setAttribue(true);
+            if (r != null) {
+                r.setDisponibilite(false);
+            }
+        }
     }
+
+    public static void reaffectationNouvSolution(Colonie colonie) {
+        for(Ressource r : colonie.getRessources()){
+            r.setDisponibilite(true);
+        }
+        for (Colon c : colonie.getColons()) {
+            c.setRessource(null);
+            c.setAttribue(false);
+
+        }
+    }
+
 
 }
