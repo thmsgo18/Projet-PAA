@@ -200,6 +200,12 @@ public class Algo {
             c.setAttribue(false);
 
         }
+        for(Colon c : colonie.getColons()){
+            c.setRessource(meilleurSolution.get(c));
+            c.setAttribue(true);
+            c.getRessource().setDisponibilite(false);
+
+        }
     }
 
 
