@@ -10,6 +10,11 @@ import java.util.StringTokenizer;
  */
 public class Fichier {
     /**
+     * Cette classe étant static, nous n'avons pas de constructeur.
+     */
+    public Fichier() {}
+
+    /**
      * Cette méthode static permet de créer une colonie à partir d'un fichier texte.
      *
      * @param cheminFichier de type String permettant d'avoir le chemin du fichier texte à partir duquel nous allons construire la colonie.

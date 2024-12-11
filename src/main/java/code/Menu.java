@@ -8,6 +8,11 @@ import java.util.InputMismatchException;
  */
 public class Menu {
     /**
+     * Cette classe étant static, nous n'avons pas de constructeur.
+     */
+    public Menu(){}
+
+    /**
      * Cette méthode static permet de :
      *      1 : Ajouter une relation 'ne s'aiment pas' entre deux colons.
      *      2 : Ajouter une liste de préférences à un colon.

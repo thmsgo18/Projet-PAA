@@ -40,7 +40,7 @@ public class Ressource{
     /**
      * Setter de la disponibilité de la Ressource.
      *
-     * @param disponible
+     * @param disponible de type booléen.
      */
     public void setDisponibilite(boolean disponible){
         this.disponible = disponible;

@@ -8,7 +8,21 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Classe permettant d'exécuter le programme.
+ */
 public class Main {
+
+    /**
+     * Cette classe étant static, nous n'avons pas de constructeur.
+     */
+    public Main(){}
+
+    /**
+     * Méthode permettant de lancer l'exécution du programme.
+     *
+     * @param args de type String indiquant les paramètres rentrés en ligne de commande.
+     */
     public static void main(String[] args) {
         System.out.println("\n**********************************************************************************************");
         System.out.println("**********  Bienvenue dans le programme de partage de biens d'une colonie spatiale  **********\n");

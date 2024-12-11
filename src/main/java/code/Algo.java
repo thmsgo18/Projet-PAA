@@ -11,9 +11,13 @@ import java.util.Random;
  * Cette classe, contenant que des méthodes statics, permet de gérer les différents algorithmes de repartition des Ressources aux Colons.
  */
 public class Algo {
-
     private static LinkedHashMap<Colon,Ressource> meilleurSolution;
     private static int meilleurCout;
+
+    /**
+     * Cette classe étant static, nous n'avons pas de constructeur.
+     */
+    public Algo(){}
 
     /**
      * Cette méthode permet de faire une première affectation des Ressources aux Colons.
@@ -115,6 +119,14 @@ public class Algo {
         return res;
     }
 
+    /**
+     * Cette classe permet de trouver la meilleure affectation des Ressources aux Colons.
+     *
+     * @param colonie de type Colonie.
+     * @param k de type int indiquant le nombre l'essaie que la méthode a pour trouver une meilleure affectation.
+     * @throws ColonNonPresentDansColonieException dans le cas où un colon n'est pas présent dans la Colonie.
+     * @throws MemeColonException dans le cas où Colon1 et Colon2 sont le même Colon.
+     */
     public static void RecuitSimule(Colonie colonie, int k) throws ColonNonPresentDansColonieException, MemeColonException {
         SolutionNaif(colonie);
         int cout = calculAffectation(colonie);
