@@ -3,23 +3,28 @@ package code;
 import code.exception.*;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("\n**********************************************************************************************");
+        System.out.println("**********  Bienvenue dans le programme de partage de biens d'une colonie spatiale  **********\n");
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Entrez le nom de la colonie : ");
         String nom = sc.nextLine();
-
-        String cheminFichier = "src/main/fichierTXT/Colonie30.txt";
         Colonie colonie = new Colonie(nom);
+
+        String cheminFichier = "src/main/fichierTXT/config.txt";
 
         try{
             Fichier.init2(cheminFichier, colonie);
             Menu.menuSolutionAuto(colonie);
-        }catch(ParamException |
+
+        } catch(ParamException |
                SyntaxeException |
                ColonDejaDansColonieException |
                RessourceDejaDansColonieException |
@@ -34,11 +39,16 @@ public class Main {
         {
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
         }catch(IOException e){
-            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+            System.err.println("ERREUR : Le fichier n'existe pas");
+            System.err.println("La colonie va être créer manuellement");
+
+            //System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
             Menu.menu1(colonie);
         }
+        System.out.println("**********************************************************************************************");
 
 
 
+        sc.close();
     }
 }

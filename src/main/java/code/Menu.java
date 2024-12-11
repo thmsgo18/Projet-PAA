@@ -8,10 +8,10 @@ import java.util.InputMismatchException;
  */
 public class Menu {
     /**
-     * Cette méthode static permettra de :
+     * Cette méthode static permet de :
      *      1 : Ajouter une relation 'ne s'aiment pas' entre deux colons.
      *      2 : Ajouter une liste de préférences à un colon.
-     *      3 : Passager au menu 2.
+     *      3 : Passer au menu 2.
      *
      * @param colonie de type Colonie.
      */
@@ -20,8 +20,9 @@ public class Menu {
 
         int choix = -1;
 
+        System.out.println("\n*******************************************  MENU 1  *****************************************");
         while(choix!=3) {
-            System.out.println("Que voulez-vous faire : ");
+            System.out.println("\nQue voulez-vous faire : ");
             System.out.println("        1 : Ajouter une relation 'ne s'aiment pas' entre deux colons ");
             System.out.println("        2 : Ajouter une liste de préférences à un colon ");
             System.out.println("        3 : Fin ");
@@ -61,7 +62,6 @@ public class Menu {
 
                     case 3:
                         if (colonie.verificationListePref()) {
-                            //Algo.algoNaif(colonie);
                             Algo.SolutionNaif(colonie);
                             Menu.menu2(colonie);
                         }else{
@@ -70,49 +70,48 @@ public class Menu {
                         break;
 
                     default:
-                        System.out.println("Le nombre est incorrect !");
+                        System.err.println("ERREUR : Le choix est invalide !");
                         break;
                 }
             } catch (InputMismatchException e) {
-                e.getMessage();
+                System.err.println("ERREUR : Ce type d'entrée n'est pas accepté !");
                 colonie.getSc().next();
             }
         }
     }
 
     /**
-     * Cette méthode static permettra de :
+     * Cette méthode static permet de :
      *      1 : Échanger les ressources de 2 colons.
-     *      2 : Afficher le nombre de jaloux.
+     *      2 : Afficher le nombre de colons jaloux.
      *      3 : Terminer le programme.
      *
      * @param colonie de type Colonie.
      */
     public static void menu2(Colonie colonie) {
-
-        System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
+        System.out.println("\n*******************************************  MENU 2  *******************************************");
         colonie.afficherObjets();
+
         int choix = -1;
         while(choix!=3){
-            System.out.println("Menu 2 que voulez-vous faire : ");
-            System.out.println("        1 : Échanger les ressources de 2 colons ");
-            System.out.println("        2 : Afficher le nombre de jaloux ");
+            System.out.println("\nQue voulez-vous faire : ");
+            System.out.println("        1 : Échanger les ressources de deux colons ");
+            System.out.println("        2 : Afficher le nombre de colons jaloux ");
             System.out.println("        3 : Fin ");
             try{
                 choix = colonie.getSc().nextInt();
                 colonie.getSc().nextLine();
                 switch(choix) {
                     case 1 :
-                        System.out.println("Entrez le nom du premier colon : ");
+                        System.out.println("Entrez le nom du colon 1 : ");
                         String nomColon1 = colonie.getSc().nextLine();
-                        System.out.println("Entrez le nom du deuxième colon : ");
+                        System.out.println("Entrez le nom du colon 2 : ");
                         String nomColon2 = colonie.getSc().nextLine();
                         try{
                             colonie.echangeRessource(nomColon1, nomColon2);
                         }catch(MemeColonException | ColonNonPresentDansColonieException e){
                             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
-                        System.out.println("Récapitulatif des Colons et de leur code.Ressource:");
                         colonie.afficherObjets();
                         break;
 
@@ -121,14 +120,15 @@ public class Menu {
                         break;
 
                     case 3 :
-                        System.out.println("Fin du programme ! ");
+                        System.out.println("Fin du programme !");
                         break;
 
                     default:
+                        System.err.println("ERREUR : Le choix est invalide !");
                         break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("La valeur entrée n'est pas un entier !");
+                System.err.println("ERREUR : Ce type d'entrée n'est pas accepté !");
                 colonie.getSc().next();
             }
 
@@ -137,7 +137,7 @@ public class Menu {
 
     /**
      * (Dans le cas de l'utilisation d'un fichier de configuration de la colonie)
-     * Cette méthode static permettra de :
+     * Cette méthode static permet de :
      *      1 : Réaliser une affectation automatique des ressources aux colons.
      *      2 : Sauvegarder la colonie actuelle.
      *      3 : Terminer le programme.
@@ -145,16 +145,17 @@ public class Menu {
      * @param colonie de type Colonie
      */
     public static void menuSolutionAuto(Colonie colonie){
-        int choix = -1;
-        colonie.afficherColonsPasAmis();
+        System.out.println("\n*********************************  MENU SOLUTION AUTOMATIQUE  *********************************");
         colonie.afficherListePrefColons();
+        colonie.afficherColonsPasAmis();
+
+        int choix = -1;
         while(choix!=3){
-            System.out.println("Menu solution auto que voulez-vous faire : ");
+            System.out.println("\nQue voulez-vous faire : ");
             System.out.println("        1 : Résolution automatique");
             System.out.println("        2 : Sauvegarder la solution actuelle");
             System.out.println("        3 : Fin");
             try{
-                System.out.println("Quelle est votre choix ?");
                 choix = colonie.getSc().nextInt();
                 colonie.getSc().nextLine();
                 switch(choix){
@@ -168,16 +169,16 @@ public class Menu {
                         }
                         colonie.afficherJaloux();
                         break;
+
                     case 2 :
-                        System.out.println("Vous avez choisit la sauvegarde ! ");
-                        System.out.println("Entrez le nom du fichier où sera sauvegarder la colonie : ");
+                        System.out.println("\n**********  Sauvegarde de la solution actuelle  **********");
+                        System.out.println("\nEntrez le chemin du fichier de sauvegarde : ");
                         String chemin = colonie.getSc().nextLine();
                         try{
                             Fichier.sauvegarde(chemin, colonie);
                         }catch(FichierException e){
                             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
-
                         break;
 
                     case 3 :
@@ -185,11 +186,12 @@ public class Menu {
                         break;
 
                     default:
+                        System.err.println("ERREUR : Le choix est invalide !");
                         break;
                 }
 
             }catch(InputMismatchException e){
-                System.out.println("Vous avez taper un mauvais caractère !");
+                System.err.println("ERREUR : Ce type d'entrée n'est pas accepté !");
                 colonie.getSc().nextLine();
 
             }
