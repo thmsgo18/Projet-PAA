@@ -3,26 +3,31 @@ package code;
 import code.exception.ColonNonPresentDansColonieException;
 import code.exception.MemeColonException;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Cette classe, contenant que des méthodes statics, permet de gérer les différents algorithmes de repartition des Ressources aux Colons.
+ */
 public class Algo {
-
 
     private static LinkedHashMap<Colon,Ressource> meilleurSolution;
     private static int meilleurCout;
 
+    /**
+     * Cette méthode permet de faire une première affectation des Ressources aux Colons.
+     * Cet algorithme permet d'affecter la première Ressource d'un Colon, si cette dernière et disponible. Si cela n'est pas possible l'algorithme passe à la Ressource préférée suivante et ainsi de suite.
+     *
+     * @param c de type Colonie.
+     */
     public static void SolutionNaif(Colonie c){
-        System.out.println("salut");
-        System.out.println("***********************Debut de l'algorithme naïf***********************");
         int i = 0;
-        int fin = c.getColons().get(i).getPreferencesRessource().size();
+        int fin = c.getColons().get(i).getPreferencesRessources().size();
         while(i<fin){
             for(Colon colon : c.getColons()){
                 for(Ressource r : c.getRessources()){
-                    if((r.equals(colon.getPreferencesRessource().get(i)) && r.getDisponibilite() && !(colon.isAttribue()))){
+                    if((r.equals(colon.getPreferencesRessources().get(i)) && r.getDisponibilite() && !(colon.isAttribue()))){
                         r.setDisponibilite(false);
                         colon.setRessource(r);
                         colon.setAttribue(true);
@@ -33,9 +38,15 @@ public class Algo {
             }
             i++;
         }
-        System.out.println("***********************Fin de l'algorihtme naïf***********************");
     }
 
+    /**
+     * Cette méthode permet de tester tous les échanges possibles entre un Colon passé en paramètre et ses voisins. Si le nombre de jaloux diminue, nous conservons cette attribution des Ressources.
+     *
+     * @param colon de type Colon indiquant le Colon central sur lequel nous allons tester les échanges.
+     * @param colonie de type Colonie.
+     * @param affectation de type int indiquant le nombre d'affectations avant de l'appel de cette méthode.
+     */
     public static void testEchange(Colon colon, Colonie colonie, int affectation){
         int affect = affectation;
         for(Colon c : colon.getPasAmis()){
@@ -54,6 +65,13 @@ public class Algo {
         }
     }
 
+    /**
+     * Cette méthode permet de réduire le nombre de jaloux dans la Colonie.
+     * L'algorithme utilisé ici se base sur une heuristique du plus contraint d’abord. Nous allons trier la liste des Colons par ordre décroissant par rapport à leur nombre de relations 'pas amis'.
+     * Une fois la liste triée, nous allons boucler sur cette liste et essayer de trouver une meilleure affectation.
+     *
+     * @param colonie de type Colonie.
+     */
     public static void resolutionAutomatique2(Colonie colonie){
         SolutionNaif(colonie);
         colonie.trieListColon();
@@ -66,6 +84,12 @@ public class Algo {
         System.out.println("Le nombre d'affectation à la fin est de :"+ colonie.getAffectation());
     }
 
+    /**
+     * Cette méthode permet de savoir le nombre de jaloux dans la Colonie.
+     *
+     * @param colonie de type Colonie.
+     * @return de type int indiquant le nombre de jaloux dans la Colonie.
+     */
     public static int calculAffectation(Colonie colonie){
         int res = 0;
         boolean jaloux;
@@ -78,7 +102,7 @@ public class Algo {
                 // Assurez-vous que c.getPosRessource() est correctement mis à jour.
                 // On peut vérifier la préférence en utilisant directement l'ordre dans preferences.
                 for(int i = 0; i<c.getPosRessource();i++) {
-                    if (c1.getRessource()!=null && c1.getRessource().equals(c.getPreferencesRessource().get(i))) {
+                    if (c1.getRessource()!=null && c1.getRessource().equals(c.getPreferencesRessources().get(i))) {
                         jaloux = true;
                     }
                 }
@@ -159,7 +183,12 @@ public class Algo {
 
     }
 
-
+    /**
+     * Cette méthode permet d'avoir l'affectation des Ressources aux Colons sous forme d'une LinkedHashMap.
+     *
+     * @param colonie de type Colonie.
+     * @return de type LinkedHashMap.
+     */
     private static LinkedHashMap<Colon,Ressource> affectationCourant(Colonie colonie){
         LinkedHashMap<Colon,Ressource> affectCourant = new LinkedHashMap<>();
         for(Colon c : colonie.getColons()){
@@ -169,17 +198,24 @@ public class Algo {
     }
 
 
+    /**
+     * Cette méthode permet d'afficher l'affectation des Ressources aux Colons de la LinkedHashMap de la meilleure solution.
+     */
     private static void afficheDico(){
         for(Colon c : meilleurSolution.keySet()){
             System.out.println(c.getNom()+" : "+meilleurSolution.get(c).getNomRessource());
         }
     }
 
+    /**
+     * Cette méthode permet d'afficher l'affectation des Ressources aux Colons de la LinkedHashMap passée en paramètre.
+     *
+     * @param sol de type LinkedHashMap.
+     */
     private static void afficheDico(LinkedHashMap<Colon,Ressource> sol){
         for(Colon c :sol.keySet()){
             System.out.println(c.getNom()+" : "+c.getRessource().getNomRessource());
         }
-
 
         for (Colon c : meilleurSolution.keySet()) {
             Ressource r = meilleurSolution.get(c);
@@ -191,6 +227,11 @@ public class Algo {
         }
     }
 
+    /**
+     * Cette méthode permet d'affecter les Ressources aux Colons en fonction de l'affectation définie dans la meilleure affectation sous forme de LinkedHashMap.
+     *
+     * @param colonie de type Colonie.
+     */
     public static void reaffectationNouvSolution(Colonie colonie) {
         for(Ressource r : colonie.getRessources()){
             r.setDisponibilite(true);
