@@ -186,11 +186,11 @@ public class Fichier {
      */
     public static void sauvegarde(String chemin, Colonie colonie)throws FichierException{
         if(chemin.equals(colonie.getCheminFichierConf())){
-            throw new FichierException("ERREUR : Le fichier est le meme que pour le fichier de configuration.");
+            throw new FichierException("ERREUR : Le fichier est identique au fichier de configuration.");
         }else{
             try(PrintWriter writer = new PrintWriter(chemin)){
                 for(Colon colon : colonie.getColons()){
-                    writer.println(colon.getNom()+":"+colon.getRessource().getNomRessource());
+                    writer.println(colon.getNom() + ":" + colon.getRessource().getNomRessource());
                 }
             }catch(IOException e){
                 System.out.println(e.getClass().getName()+ "\n" + e.getMessage());

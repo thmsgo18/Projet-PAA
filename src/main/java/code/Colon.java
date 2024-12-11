@@ -8,21 +8,22 @@ import java.util.ArrayList;
  *
  */
 public class Colon {
-    private final String nom;
-    private List<Ressource> preferencesRessource;
+    private String nom;
+    private List<Ressource> preferencesRessources;
     private List<Colon> pasAmis;
     private Ressource ressource;
     private int posRessource;
     private boolean attribue;
 
+
     /**
-     * Le constructeur de l'object Colon.
+     * Le constructeur de l'objet Colon.
      *
      * @param nom de type String du Colon.
      */
     public Colon(String nom) {
         this.nom = nom;
-        this.preferencesRessource = new ArrayList<>();
+        this.preferencesRessources = new ArrayList<>();
         this.pasAmis = new ArrayList<>();
         this.ressource = null;
         this.posRessource = -1;
@@ -43,28 +44,28 @@ public class Colon {
      *
      * @return de type List de Ressource.
      */
-    public List<Ressource> getPreferencesRessource() {
-        return preferencesRessource;
+    public List<Ressource> getPreferencesRessources() {
+        return preferencesRessources;
     }
 
     /**
      * Setter de la liste de préférence des Ressources du Colon.
      *
-     * @param preferencesRessource de type List de Ressource.
+     * @param preferencesRessources de type List de Ressource.
      */
-    public void setPreferencesRessource(List<Ressource> preferencesRessource) {
-        this.preferencesRessource = preferencesRessource;
+    public void setPreferencesRessources(List<Ressource> preferencesRessources) {
+        this.preferencesRessources = preferencesRessources;
     }
 
-    /**
-     * Getter de la Ressource présente à une position donnée dans la liste de préférence du Colon.
-     *
-     * @param i de type int indiquant la position dans la liste de préférence.
-     * @return de type Ressource.
-     */
-    public Ressource getUnePreferenceRessource(int i) {
-        return preferencesRessource.get(i);
-    }
+//    /**
+//     * Getter de la Ressource présente à une position donnée dans la liste de préférences du Colon.
+//     *
+//     * @param i de type int indiquant la position dans la liste de préférences du Colon.
+//     * @return de type Ressource.
+//     */
+//    public Ressource getUnePreferenceRessource(int i) {
+//        return preferencesRessources.get(i);
+//    }
 
     /**
      * Getter de la liste de 'pas amis' du Colon.
@@ -85,7 +86,7 @@ public class Colon {
     }
 
     /**
-     * Cette méthode permet de rechercher un Colon dans la liste de 'pas amis' du Colon.
+     * Cette méthode permet de vérifier si un Colon est dans la liste de 'pas amis' du Colon.
      *
      * @param c de type Colon.
      * @return de type booléen.
@@ -119,13 +120,13 @@ public class Colon {
     }
 
     /**
-     * Getter de la position de la Ressource, attribuée au Colon, dans la liste de préférence du Colon.
+     * Getter de la position de la Ressource, attribuée au Colon, dans la liste de préférences du Colon.
      *
      * @return de type int.
      */
     public int getPosRessource() {
-        for(int i =0;i<preferencesRessource.size();i++){
-            if(preferencesRessource.get(i).equals(this.ressource)) {
+        for(int i=0; i<preferencesRessources.size(); i++){
+            if(preferencesRessources.get(i).equals(this.ressource)) {
                 return i;
             }
         }
@@ -160,9 +161,9 @@ public class Colon {
     }
 
     /**
-     * Cette méthode permet de tester l'égaler entre deux Colons.
+     * Cette méthode permet de vérifier si deux Colons sont égaux.
      *
-     * @param colon de type Colon à tester.
+     * @param colon de type Colon.
      * @return de type booléen.
      */
     public boolean equals(Colon colon) {

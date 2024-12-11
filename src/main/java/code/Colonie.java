@@ -5,7 +5,7 @@ import code.exception.*;
 import java.util.*;
 
 /**
- * Cette classe permet bde représenter une Colonie
+ * Cette classe permet de représenter une Colonie
  */
 public class Colonie {
     private String nom;
@@ -22,11 +22,11 @@ public class Colonie {
      */
     public Colonie(String nom) {
         this.nom = nom;
-        this.ressourcesColonie = new ArrayList<Ressource>(26);
-        this.colons = new ArrayList<Colon>(26);
+        this.ressourcesColonie = new ArrayList<Ressource>();
+        this.colons = new ArrayList<Colon>();
         this.sc = new Scanner(System.in);
         this.affectation = 0;
-        this.cheminFichierConf="";
+        this.cheminFichierConf = "";
     }
 
     /**
@@ -34,12 +34,13 @@ public class Colonie {
      * Création de n Colons et de n Ressources.
      */
     public void init() {
-        // Initialisation de la colonie
+        System.out.println("\n********************  CREATION MANUELLE DE LA COLONIE " + nom + "  ********************");
         Integer n = null;
         while (n == null) {
-            System.out.println("Entrez le nombre de colons dans la colonie " + this.nom);
+            System.out.println("\nEntrez le nombre de colons dans la colonie " + this.nom + " : ");
             if (sc.hasNextInt()) {
                 n = sc.nextInt();
+
                 if (n <= 0) {
                     System.out.println("Le nombre doit être supérieur à zéro. Réessayez.");
                     n = null;
@@ -53,7 +54,7 @@ public class Colonie {
 
         // Création des colons et des ressources
         for (int i = 0; i < n; i++) {
-            System.out.println("Entrez le nom du colon" + (i + 1) + " :");
+            System.out.println("Entrez le nom du colon " + (i + 1) + " :");
             String nomColon = sc.nextLine();
             Colon colon = new Colon(nomColon);
             try {
@@ -64,7 +65,7 @@ public class Colonie {
             }
         }
         for (int i = 0; i < n; i++) {
-            System.out.println("Entrez le nom de la ressource" + (i + 1) + " :");
+            System.out.println("Entrez le nom de la ressource " + (i + 1) + " :");
             String nomRessource = sc.nextLine();
             Ressource ressource = new Ressource(nomRessource);
             try {
@@ -76,11 +77,11 @@ public class Colonie {
         }
 
 
-        System.out.println("Liste des colons de la colonie : ");
+        System.out.println("\n**********  Liste des colons de la colonie  **********");
         for(Colon colon : colons) {
             System.out.print(colon.getNom() + " ");
         }
-        System.out.println("\nListe des ressources de la colonie : ");
+        System.out.println("\n\n**********  Liste des ressources de la colonie  **********");
         for(Ressource ressource : ressourcesColonie) {
             System.out.print(ressource.getNomRessource() + " ");
         }
@@ -116,9 +117,10 @@ public class Colonie {
             }
             if (colon1==null || colon2==null){
                 throw new ColonNonPresentDansColonieException("ERREUR : Un ou deux colons sélectionné ne sont pas présent dans la liste des colons.");
+
             }else {
                 if (colon1.recherchePasAmis(colon2) || colon2.recherchePasAmis(colon1)) {
-                    throw new ColonDejaDansLaRelationException("ERREUR : Le colon "+ colon2.getNom() +" est déjà dans la liste des 'pas amis' du colon "+ colon1.getNom() +" et inversement.");
+                    throw new ColonDejaDansLaRelationException("ERREUR : Les colons " + colon1.getNom() + " et " + colon2.getNom() + " possède déjà une relation 'pas amis' entre eux.");
                 } else {
                     // Ajout dans colon1 & dans colon2 d'une relation 'pas amie'
                     colon1.addPasAmis(colon2);
@@ -195,7 +197,7 @@ public class Colonie {
                         throw new RessourcePasDansColonieException("ERREUR : Une des ressources n'existe pas.");
                     }
                 }
-                this.getColons(nom).setPreferencesRessource(listePref);
+                this.getColons(nom).setPreferencesRessources(listePref);
             }
         }
     }
@@ -211,16 +213,16 @@ public class Colonie {
         //Vérification que la liste de préférences de chaque colon est complète
         for(Colon colon : colons) {
             //Sinon, on ajoute le colon à la liste des colons incomplets
-            if(colon.getPreferencesRessource().size() != colons.size()) {
+            if(colon.getPreferencesRessources().size() != colons.size()) {
                 colonsIncomplets.add(colon);
             }
         }
 
         // Affichage de la liste des colons incomplets
         if(!colonsIncomplets.isEmpty()) {
-            System.out.println("Liste des colons avec des listes de préférences vides ou incomplètes : ");
+            System.out.println("\n**********  Liste des colons avec des listes de préférences vides ou incomplètes  **********");
             for(Colon colon : colonsIncomplets) {
-                System.out.println("    " + colon.getNom());
+                System.out.println("        " + colon.getNom());
             }
             return false;
         } else {
@@ -281,7 +283,7 @@ public class Colonie {
      */
     private void calculePointRessource(){
         for (Colon colon : this.colons) {
-            List<Ressource> listeRes = colon.getPreferencesRessource();
+            List<Ressource> listeRes = colon.getPreferencesRessources();
             for(int i = 0; i < listeRes.size(); i++){
                 for(Ressource r : this.ressourcesColonie){
                     if(listeRes.get(i).equals(r)){
@@ -339,21 +341,21 @@ public class Colonie {
      */
     public void afficherJaloux(){
         this.afficherListePrefColons();
-        Algo.calculAffectation(this);
-        System.out.println("Le nombre de colons jaloux dans la colonie est de " + affectation);
-        System.out.println("Récapitulatif des colons et de leur ressource: ");
+        afficherColonsPasAmis();
         afficherObjets();
+        Algo.calculAffectation(this);
+        System.out.println("\n-> Le nombre de colons jaloux dans la colonie est de " + affectation);
     }
 
     /**
      * Cette méthode permet d'afficher la liste des colons et leur liste de Colons 'pas amis'.
      */
     public void afficherColonsPasAmis(){
-        System.out.println("Récapitulatif de chaque colon pas amis : ");
+        System.out.println("\n**********  Récapitulatif de tous les colons et de leur liste de colons qu'il déteste  **********");
         for(Colon c : colons){
-            System.out.print("  "+c.getNom()+" : ");
+            System.out.print("        " + c.getNom() + " : ");
             for(Colon cp : c.getPasAmis()){
-                System.out.print(cp.getNom()+" ");
+                System.out.print(cp.getNom() + " ");
             }
             System.out.println();
         }
@@ -363,13 +365,13 @@ public class Colonie {
      * Cette méthode permet d'afficher la liste de préférences de chaque Colon.
      */
     public void afficherListePrefColons(){
-        System.out.println("Récapitulatif de  la liste de préférence de chaque colon : ");
+        System.out.println("\n**********  Récapitulatif de  la liste de préférence de chaque colon  **********");
         for(Colon c : colons){
-            System.out.print("  "+c.getNom()+" : ");
-            for(Ressource r : c.getPreferencesRessource()){
-                System.out.print(r.getNomRessource()+" ");
+            System.out.print("        " + c.getNom() + " : ");
+            for(Ressource r : c.getPreferencesRessources()){
+                System.out.print(r.getNomRessource() + " ");
             }
-            System.out.print("\n");
+            System.out.println();
         }
     }
 
@@ -377,8 +379,9 @@ public class Colonie {
      * Cette méthode affiche les Colons et leur Ressource.
      */
     public void afficherObjets() {
+        System.out.println("\n**********  Récapitulatif des colons et de leur ressource attribuée  **********");
         for(Colon c : colons) {
-            System.out.println("    "+c.getNom() + ":" + c.getRessource().getNomRessource());
+            System.out.println("        " + c.getNom() + ":" + c.getRessource().getNomRessource());
         }
     }
 
