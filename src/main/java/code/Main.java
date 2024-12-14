@@ -52,11 +52,9 @@ public class Main {
                EnsembleListPreferenceColonieIncompleteException e)
         {
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
-        }catch(IOException e){
-            System.err.println("ERREUR : Le fichier n'existe pas");
-            System.err.println("La colonie va être créer manuellement");
 
-            //System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+        }catch(IOException e){
+            System.err.println("ERREUR " + e.getClass().getName() + " : Le fichier n'existe pas. La colonie va être créer manuellement");
             Menu.menu1(colonie);
         }
         System.out.println("**********************************************************************************************");

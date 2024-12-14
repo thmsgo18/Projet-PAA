@@ -42,11 +42,11 @@ public class Colonie {
                 n = sc.nextInt();
 
                 if (n <= 0) {
-                    System.out.println("Le nombre doit être supérieur à zéro. Réessayez.");
+                    System.err.println("ERREUR : Le nombre doit être supérieur à zéro. Réessayez.");
                     n = null;
                 }
             } else {
-                System.out.println("Erreur : Veuillez entrer un nombre entier valide.");
+                System.err.println("ERREUR : Veuillez entrer un nombre entier valide.");
                 sc.next();
             }
         }
@@ -60,7 +60,7 @@ public class Colonie {
             try {
                 this.addColon(colon);
             } catch (ColonDejaDansColonieException e) {
-                System.out.println(e.getClass().getName() + "\n" + e.getMessage());
+                System.err.println("ERREUR " + e.getClass().getName() + " : " + e.getMessage());
                 i--;
             }
         }
@@ -71,7 +71,7 @@ public class Colonie {
             try {
                 this.addRessource(ressource);
             } catch (RessourceDejaDansColonieException e) {
-                System.out.println(e.getClass().getName() + "\n" + e.getMessage());
+                System.err.println("ERREUR " + e.getClass().getName() + " : " + e.getMessage());
                 i--;
             }
         }
@@ -101,7 +101,7 @@ public class Colonie {
             ColonNonPresentDansColonieException,
             ColonDejaDansLaRelationException {
         if(nomColon1.equals(nomColon2)){
-            throw new MemeColonException("ERREUR : Vous ne pouvez pas lier le même colon.");
+            throw new MemeColonException("Un même colon ne peut se détester lui-même !");
         }
         else{
             Colon colon1 = null;
@@ -116,11 +116,11 @@ public class Colonie {
                 }
             }
             if (colon1==null || colon2==null){
-                throw new ColonNonPresentDansColonieException("ERREUR : Un ou deux colons sélectionné ne sont pas présent dans la liste des colons.");
+                throw new ColonNonPresentDansColonieException("Un ou deux colons sélectionné ne sont pas présent dans la liste des colons.");
 
             }else {
                 if (colon1.recherchePasAmis(colon2) || colon2.recherchePasAmis(colon1)) {
-                    throw new ColonDejaDansLaRelationException("ERREUR : Les colons " + colon1.getNom() + " et " + colon2.getNom() + " possède déjà une relation 'pas amis' entre eux.");
+                    throw new ColonDejaDansLaRelationException("Les colons " + colon1.getNom() + " et " + colon2.getNom() + " possède déjà une relation 'pas amis' entre eux.");
                 } else {
                     // Ajout dans colon1 & dans colon2 d'une relation 'pas amie'
                     colon1.addPasAmis(colon2);
@@ -149,7 +149,7 @@ public class Colonie {
     }
 
     /**
-     * Cette méthode permet d'ajouter une liste de préférence à un Colon.
+     * Cette méthode permet d'ajouter une liste de préférences à un Colon.
      *
      * @param nom de type String indiquant le nom du Colon.
      * @param ressources de type String indiquant sous forme de chaine de caractères la liste de préférences des Ressources. Les Ressources sont espacées entre elles par un espace.
@@ -171,13 +171,13 @@ public class Colonie {
             }
         }
         if(!contient) {
-            throw new ColonNonPresentDansColonieException("ERREUR : Le colon n'existe pas.");
+            throw new ColonNonPresentDansColonieException("Le colon n'existe pas.");
         }else{
             String[] res = ressources.split(" ");
 
             // Vérification de s'il y a toute la liste de préférence des ressources
             if(res.length != ressourcesColonie.size() ){
-                throw new RessourceManquanteException("ERREUR : Le nombre de resource tapé n'est pas respecté. Vous avez rentré "+res.length+" ressources. Nous avons besoin de "+ressourcesColonie.size()+" ressources.");
+                throw new RessourceManquanteException("Le nombre de resource tapé n'est pas respecté. Vous avez rentré " + res.length + " ressource(s), nous en avons besoin de " + ressourcesColonie.size() + ".");
             }else{
                 StringTokenizer tok = new StringTokenizer(ressources," ");
                 List<Ressource> listePref = new ArrayList<Ressource>(ressourcesColonie.size());
@@ -188,13 +188,13 @@ public class Colonie {
                     if(this.ressourceInList(this.ressourcesColonie, chaine)){
                         Ressource r = new Ressource(chaine);
                         if(this.ressourceInList(listePref, chaine)){
-                            throw new RessourceDoubleException("ERREUR : La ressource est en double dans la liste de préférence.");
+                            throw new RessourceDoubleException("La ressource est en double dans la liste de préférence.");
                         }else{
                             listePref.add(r);
                         }
                     }
                     else{
-                        throw new RessourcePasDansColonieException("ERREUR : Une des ressources n'existe pas.");
+                        throw new RessourcePasDansColonieException("Une des ressources n'existe pas.");
                     }
                 }
                 this.getColons(nom).setPreferencesRessources(listePref);
@@ -220,6 +220,7 @@ public class Colonie {
 
         // Affichage de la liste des colons incomplets
         if(!colonsIncomplets.isEmpty()) {
+            System.err.println("La liste de préférences de certains colons est incomplète !");
             System.out.println("\n**********  Liste des colons avec des listes de préférences vides ou incomplètes  **********");
             for(Colon colon : colonsIncomplets) {
                 System.out.println("        " + colon.getNom());
@@ -288,6 +289,7 @@ public class Colonie {
                 for(Ressource r : this.ressourcesColonie){
                     if(listeRes.get(i).equals(r)){
                         r.setPopularite(r.getPopularite()+(listeRes.size()-i));
+                        System.out.println(r.getPopularite());
                     }
                 }
             }
@@ -295,7 +297,7 @@ public class Colonie {
     }
 
     /**
-     * Cette méthode permet d'échanger les Ressources entre dex Colons.
+     * Cette méthode permet d'échanger les Ressources entre deux Colons.
      *
      * @param nomColon1 de type String indiquant le nom du premier Colon.
      * @param nomColon2 de type String indiquant le nom du deuxième Colon.
@@ -304,7 +306,7 @@ public class Colonie {
      */
     public void echangeRessource(String nomColon1, String nomColon2) throws MemeColonException, ColonNonPresentDansColonieException {
         if(nomColon2.equals(nomColon1)) {
-            throw new MemeColonException("ERREUR : On peut pas échanger les ressources d'un même colon.");
+            throw new MemeColonException("On peut pas échanger les ressources d'un même colon.");
         }
         else{
             Colon colon1 = null;
@@ -321,7 +323,7 @@ public class Colonie {
             }
 
             if(colon1 == null || colon2 == null) {
-                throw new ColonNonPresentDansColonieException("ERREUR : Un ou deux colons sélectionnés ne sont pas présent dans la liste des colons.");
+                throw new ColonNonPresentDansColonieException("Un ou deux colons sélectionnés ne sont pas présent dans la liste des colons.");
             }
             else {
                 // Échange des ressources entre les deux colons
@@ -406,10 +408,10 @@ public class Colonie {
      * @param ressource de type Ressource.
      * @throws RessourceDejaDansColonieException dans le cas où la Ressource est déjà présente dans la Colonie.
      */
-    public void addRessource(Ressource ressource)throws RessourceDejaDansColonieException{
+    public void addRessource(Ressource ressource) throws RessourceDejaDansColonieException{
         for(Ressource r1 : this.ressourcesColonie){
             if(r1.getNomRessource().equals(ressource.getNomRessource())){
-                throw new RessourceDejaDansColonieException("ERREUR : La ressource est déjà dans la colonie.");
+                throw new RessourceDejaDansColonieException("La ressource est déjà dans la colonie.");
             }
         }
         this.ressourcesColonie.add(ressource);
@@ -420,7 +422,7 @@ public class Colonie {
      *
      * @return de type List de Ressource.
      */
-    public List <Ressource> getRessources(){
+    public List<Ressource> getRessources(){
         return this.ressourcesColonie;
     }
 
@@ -456,7 +458,7 @@ public class Colonie {
     public void addColon(Colon c) throws ColonDejaDansColonieException {
         for(Colon c1 : this.colons){
             if(c1.equals(c)){
-                throw new ColonDejaDansColonieException("ERREUR : Le colon est déjà dans la colonie.");
+                throw new ColonDejaDansColonieException("Le colon est déjà dans la colonie.");
             }
         }
         this.colons.add(c);

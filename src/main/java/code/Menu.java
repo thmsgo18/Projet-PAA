@@ -43,7 +43,7 @@ public class Menu {
                             colonie.ajoutRelation(nomColon1, nomColon2);
                         } catch (MemeColonException | ColonNonPresentDansColonieException |
                                  ColonDejaDansLaRelationException e) {
-                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                            System.err.println("ERREUR " + e.getClass().getName()+ " : " + e.getMessage());
                         }
 
                         colonie.afficherColonsPasAmis();
@@ -59,7 +59,7 @@ public class Menu {
                             colonie.ajoutListePref(nom, ressource);
                         } catch (ColonNonPresentDansColonieException | RessourceManquanteException |
                                  RessourceDoubleException | RessourcePasDansColonieException e) {
-                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                            System.err.println("ERREUR : " + e.getClass().getName()+ " : " + e.getMessage());
                         }
 
                         colonie.afficherListePrefColons();
@@ -115,7 +115,7 @@ public class Menu {
                         try{
                             colonie.echangeRessource(nomColon1, nomColon2);
                         }catch(MemeColonException | ColonNonPresentDansColonieException e){
-                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                            System.err.println("ERREUR " + e.getClass().getName()+ " : " + e.getMessage());
                         }
                         colonie.afficherObjets();
                         break;
@@ -166,11 +166,11 @@ public class Menu {
                 switch(choix){
                     case 1:
                         System.out.println("Affectation des ressources de colonie :");
-                        int k =7;
+                        int k = 7;
                         try{
                             Algo.RecuitSimule(colonie,k);
                         }catch(Exception e){
-                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                            System.err.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
                         colonie.afficherJaloux();
                         break;
@@ -182,7 +182,7 @@ public class Menu {
                         try{
                             Fichier.sauvegarde(chemin, colonie);
                         }catch(FichierException e){
-                            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+                            System.err.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
                         break;
 
@@ -196,7 +196,7 @@ public class Menu {
                 }
 
             }catch(InputMismatchException e){
-                System.err.println("ERREUR : Ce type d'entrée n'est pas accepté !");
+                System.err.println("ERREUR " + e.getClass().getName() + " : Ce type d'entrée n'est pas accepté !");
                 colonie.getSc().nextLine();
 
             }
