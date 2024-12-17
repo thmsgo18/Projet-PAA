@@ -132,8 +132,8 @@ public class Algo {
         int cout = calculAffectation(colonie);
         LinkedHashMap<Colon, Ressource> solution = affectationCourant(colonie);
         double temperature = 100.0;
-        double temperatureMin = 0.01;
-        double alpha = 0.95;
+        double temperatureMin = 0.0001;
+        double alpha = 0.99;
         Random random = new Random();
 
         meilleurCout = cout;
@@ -151,6 +151,76 @@ public class Algo {
                 List<Colon> pasAmis = c1.getPasAmis();
                 if (pasAmis.isEmpty()) continue;
                 Colon c2 = pasAmis.get(random.nextInt(pasAmis.size()));
+                colonie.echangeRessource(c1.getNom(), c2.getNom());
+                int nouveauCout = calculAffectation(colonie);
+
+                if (nouveauCout <= cout) {
+                    // Accepter la nouvelle solution
+                    cout = nouveauCout;
+                    solution = affectationCourant(colonie);
+
+                    if (nouveauCout <= meilleurCout) {
+                        meilleurCout = nouveauCout;
+                        meilleurSolution = solution;
+
+                    }
+                } else {
+                    // Accepter avec une probabilité
+                    int delta = nouveauCout - cout;
+                    double p = Math.exp(-delta / temperature);
+                    if (random.nextDouble() < p) {
+                        cout = nouveauCout;
+                        solution = affectationCourant(colonie);
+
+                    } else {
+                        colonie.echangeRessource(c2.getNom(), c1.getNom());
+                    }
+                }
+            }
+            // Réduire la température
+            temperature *= alpha;
+        }
+        System.out.println("Affichage avant affectation final :");
+        afficheDico();
+        System.out.println("Le nombre de jaloux : "+meilleurCout);
+        System.out.println("Le nombre de jaloux : "+calculAffectation(colonie));
+        colonie.afficherObjets();
+
+        reaffectationNouvSolution(colonie);
+
+        System.out.println("Voici l'affectation final : ");
+        colonie.afficherObjets();
+        System.out.println("Le nombre de jaloux : "+meilleurCout);
+
+
+    }
+
+    public static void RecuitSimule2(Colonie colonie, int k) throws ColonNonPresentDansColonieException, MemeColonException {
+        SolutionNaif(colonie);
+        int cout = calculAffectation(colonie);
+        LinkedHashMap<Colon, Ressource> solution = affectationCourant(colonie);
+        double temperature = 100.0;
+        double temperatureMin = 0.0001;
+        double alpha = 0.99;
+        Random random = new Random();
+
+        meilleurCout = cout;
+        meilleurSolution = solution;
+
+        System.out.println("**************************Voici la meilleur affectation pour l'instant**************************");
+        afficheDico();
+        System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
+
+        while (temperature > temperatureMin) {
+            for (int i = 0; i < k; i++) {
+
+                int indColon1 = random.nextInt(colonie.getColons().size());
+                int indColon2 = random.nextInt(colonie.getColons().size());
+                while(indColon2 == indColon1){
+                    indColon2 = random.nextInt(colonie.getColons().size());
+                }
+                Colon c1 = colonie.getColons().get(indColon1);
+                Colon c2 = colonie.getColons().get(indColon2);
                 colonie.echangeRessource(c1.getNom(), c2.getNom());
                 int nouveauCout = calculAffectation(colonie);
 
