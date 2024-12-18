@@ -1,12 +1,8 @@
 package code;
+import java.io.IOException;
+import java.util.Scanner;
 
 import exception.*;
-
-
-import java.io.File;
-import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 /**
  * Classe permettant d'exécuter le programme.
@@ -14,12 +10,12 @@ import java.util.Scanner;
 public class Main {
 
     /**
-     * Cette classe étant static, nous n'avons pas de constructeur.
+     * Cette classe étant statique, nous n'avons pas de constructeur.
      */
     public Main(){}
 
     /**
-     * Méthode permettant de lancer l'exécution du programme.
+     * Méthode statique permettant de lancer l'exécution du programme.
      *
      * @param args de type String indiquant les paramètres rentrés en ligne de commande.
      */
@@ -32,34 +28,35 @@ public class Main {
         String nom = sc.nextLine();
         Colonie colonie = new Colonie(nom);
 
-        String cheminFichier = "src/main/fichierTXT/equipage1";
-
-        try{
-            Fichier.init2(cheminFichier, colonie);
-            Menu.menuSolutionAuto(colonie);
-
-        } catch(ParamException |
-                SyntaxeException |
-                ColonDejaDansColonieException |
-                RessourceDejaDansColonieException |
-                MemeColonException |
-                ColonNonPresentDansColonieException |
-                ColonDejaDansLaRelationException |
-                RessourceManquanteException |
-                RessourceDoubleException |
-                RessourcePasDansColonieException |
-                NbrColonPasEgaleNbrRessourceException |
-                EnsembleListPreferenceColonieIncompleteException e)
-        {
-            System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
-
-        }catch(IOException e){
-            System.err.println("ERREUR " + e.getClass().getName() + " : Le fichier n'existe pas. La colonie va être créer manuellement");
+        if (args.length == 0) {
             Menu.menu1(colonie);
+        }else{
+            try{
+                String cheminFichier = args[0];
+                Fichier.init2(cheminFichier, colonie);
+                Menu.menuSolutionAuto(colonie);
+            } catch(ParamException |
+                    SyntaxeException |
+                    ColonDejaDansColonieException |
+                    RessourceDejaDansColonieException |
+                    MemeColonException |
+                    ColonNonPresentDansColonieException |
+                    ColonDejaDansLaRelationException |
+                    RessourceManquanteException |
+                    RessourceDoubleException |
+                    RessourcePasDansColonieException |
+                    NbrColonPasEgaleNbrRessourceException |
+                    EnsembleListPreferenceColonieIncompleteException e)
+            {
+                System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
+
+            }catch(IOException e){
+                System.err.println("ERREUR " + e.getClass().getName() + " : Le fichier n'existe pas. La colonie va être créer manuellement");
+                Menu.menu1(colonie);
+            }
         }
+
         System.out.println("**********************************************************************************************");
-
-
 
         sc.close();
     }
