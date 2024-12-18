@@ -1,17 +1,11 @@
-# Project Name
+# Répartition de ressource dans une colonie
 
-## Overview
+## Comment Utiliser
 
-This project provides a streamlined approach to compile, run, and manage the code. You can use either the provided `Makefile` or manual commands via the terminal.
+### Option 1 : Utilisation du Makefile
 
----
+Le `Makefile` automatise les tâches courantes. Voici les commandes disponibles :
 
-## How to Use
-
-### Option 1: Using the Makefile
-
-The `Makefile` simplifies common tasks. Use the following commands:
-
-- **Compilation**:  
+- **Compilation** :  
   ```bash
   make compilation
