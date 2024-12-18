@@ -1,7 +1,7 @@
 package code;
 
-import code.exception.ColonNonPresentDansColonieException;
-import code.exception.MemeColonException;
+import exception.ColonNonPresentDansColonieException;
+import exception.MemeColonException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,7 +36,6 @@ public class Algo {
                         colon.setRessource(r);
                         colon.setAttribue(true);
                         colon.setPosRessource(i);
-                        System.out.println("Position de la ressource attribuée à "+colon.getNom()+" : "+colon.getPosRessource());
                     }
                 }
             }
@@ -76,7 +75,7 @@ public class Algo {
      *
      * @param colonie de type Colonie.
      */
-    public static void resolutionAutomatique2(Colonie colonie){
+    public static void resolutionAutomatique(Colonie colonie){
         SolutionNaif(colonie);
         colonie.trieListColon();
         calculAffectation(colonie);
@@ -120,10 +119,10 @@ public class Algo {
     }
 
     /**
-     * Cette classe permet de trouver la meilleure affectation des Ressources aux Colons.
+     * Cette méthode applique l'algorithme du recuit simulé pour améliorer la répartition des Ressources aux Colons et réduire le nombre de Colons jaloux.
      *
      * @param colonie de type Colonie.
-     * @param k de type int indiquant le nombre l'essaie que la méthode a pour trouver une meilleure affectation.
+     * @param k de type int indiquant le nombre l'essaie que la méthode à pour trouver une meilleure affectation.
      * @throws ColonNonPresentDansColonieException dans le cas où un colon n'est pas présent dans la Colonie.
      * @throws MemeColonException dans le cas où Colon1 et Colon2 sont le même Colon.
      */
@@ -139,75 +138,7 @@ public class Algo {
         meilleurCout = cout;
         meilleurSolution = solution;
 
-        System.out.println("**************************Voici la meilleur affectation pour l'instant**************************");
-        afficheDico();
-        System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
-
-        while (temperature > temperatureMin) {
-            for (int i = 0; i < k; i++) {
-
-                int indColon1 = random.nextInt(colonie.getColons().size());
-                Colon c1 = colonie.getColons().get(indColon1);
-                List<Colon> pasAmis = c1.getPasAmis();
-                if (pasAmis.isEmpty()) continue;
-                Colon c2 = pasAmis.get(random.nextInt(pasAmis.size()));
-                colonie.echangeRessource(c1.getNom(), c2.getNom());
-                int nouveauCout = calculAffectation(colonie);
-
-                if (nouveauCout <= cout) {
-                    // Accepter la nouvelle solution
-                    cout = nouveauCout;
-                    solution = affectationCourant(colonie);
-
-                    if (nouveauCout <= meilleurCout) {
-                        meilleurCout = nouveauCout;
-                        meilleurSolution = solution;
-
-                    }
-                } else {
-                    // Accepter avec une probabilité
-                    int delta = nouveauCout - cout;
-                    double p = Math.exp(-delta / temperature);
-                    if (random.nextDouble() < p) {
-                        cout = nouveauCout;
-                        solution = affectationCourant(colonie);
-
-                    } else {
-                        colonie.echangeRessource(c2.getNom(), c1.getNom());
-                    }
-                }
-            }
-            // Réduire la température
-            temperature *= alpha;
-        }
-        System.out.println("Affichage avant affectation final :");
-        afficheDico();
-        System.out.println("Le nombre de jaloux : "+meilleurCout);
-        System.out.println("Le nombre de jaloux : "+calculAffectation(colonie));
-        colonie.afficherObjets();
-
-        reaffectationNouvSolution(colonie);
-
-        System.out.println("Voici l'affectation final : ");
-        colonie.afficherObjets();
-        System.out.println("Le nombre de jaloux : "+meilleurCout);
-
-
-    }
-
-    public static void RecuitSimule2(Colonie colonie, int k) throws ColonNonPresentDansColonieException, MemeColonException {
-        SolutionNaif(colonie);
-        int cout = calculAffectation(colonie);
-        LinkedHashMap<Colon, Ressource> solution = affectationCourant(colonie);
-        double temperature = 100.0;
-        double temperatureMin = 0.0001;
-        double alpha = 0.99;
-        Random random = new Random();
-
-        meilleurCout = cout;
-        meilleurSolution = solution;
-
-        System.out.println("**************************Voici la meilleur affectation pour l'instant**************************");
+        System.out.println("**************************  Voici l'affectation en utilisant l'algorithme naïf  **************************");
         afficheDico();
         System.out.println("Le nombre de jaloux dans la colonie est de : "+meilleurCout);
 
@@ -250,18 +181,12 @@ public class Algo {
             // Réduire la température
             temperature *= alpha;
         }
-        System.out.println("Affichage avant affectation final :");
-        afficheDico();
-        System.out.println("Le nombre de jaloux : "+meilleurCout);
-        System.out.println("Le nombre de jaloux : "+calculAffectation(colonie));
-        colonie.afficherObjets();
 
         reaffectationNouvSolution(colonie);
 
-        System.out.println("Voici l'affectation final : ");
+        System.out.println("\nVoici l'affectation finale : ");
         colonie.afficherObjets();
-        System.out.println("Le nombre de jaloux : "+meilleurCout);
-
+        System.out.println("\n-> Le nombre de colons jaloux dans la colonie est de " + meilleurCout);
 
     }
 
@@ -278,7 +203,6 @@ public class Algo {
         }
         return affectCourant;
     }
-
 
     /**
      * Cette méthode permet d'afficher l'affectation des Ressources aux Colons de la LinkedHashMap de la meilleure solution.

@@ -6,15 +6,15 @@
 
 Voici les commandes disponibles :
 
-- **Compilation** :  
+- **Compilation** :
   ```bash
   make compilation
-  
-- **Run** :  
+
+- **Run** :
   ```bash
   make run
-  
-- **Clear** :  
+
+- **Clear** :
   ```bash
   make clear
 
@@ -22,10 +22,40 @@ Voici les commandes disponibles :
 
 Voici les commandes disponibles :
 
-- **Compilation** :  
+- **Compilation** :
   ```bash
-  javac src/**/*.java -d bin
-  
-- **Run** :  
+  javac src/main/java/**/*.java -d bin
+
+- **Run** :
   ```bash
   java -cp bin code.Main
+
+
+## Exemple d'exécution
+
+Pour tester le programme il est possible d'exécuter le programme sur des colonies de test.
+
+- **Colonie20.txt**:
+  ```bash
+  java -cp bin code.Main fichierTXT/Colonie20.txt
+
+- **Colonie30.txt**:
+  ```bash
+  java -cp bin code.Main fichierTXT/Colonie30.txt
+
+- **config.txt**:
+  ```bash
+  java -cp bin code.Main fichierTXT/config.txt
+
+- **equipage1**:
+  ```bash
+  java -cp bin code.Main fichierTXT/equipage1
+
+- **equipage2**:
+  ```bash
+  java -cp bin code.Main fichierTXT/equipage2
+
+- **equipage3**:
+  ```bash
+  java -cp bin code.Main fichierTXT/equipage3
+  

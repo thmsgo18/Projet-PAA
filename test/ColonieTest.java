@@ -2,7 +2,7 @@ import code.Algo;
 import code.Colon;
 import code.Colonie;
 import code.Ressource;
-import code.exception.*;
+import exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

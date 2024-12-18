@@ -57,16 +57,6 @@ public class Colon {
         this.preferencesRessources = preferencesRessources;
     }
 
-//    /**
-//     * Getter de la Ressource présente à une position donnée dans la liste de préférences du Colon.
-//     *
-//     * @param i de type int indiquant la position dans la liste de préférences du Colon.
-//     * @return de type Ressource.
-//     */
-//    public Ressource getUnePreferenceRessource(int i) {
-//        return preferencesRessources.get(i);
-//    }
-
     /**
      * Getter de la liste de 'pas amis' du Colon.
      *

@@ -1,6 +1,6 @@
 package code;
 
-import code.exception.*;
+import exception.*;
 
 import java.util.*;
 
@@ -367,7 +367,7 @@ public class Colonie {
      * Cette méthode permet d'afficher la liste de préférences de chaque Colon.
      */
     public void afficherListePrefColons(){
-        System.out.println("\n**********  Récapitulatif de  la liste de préférence de chaque colon  **********");
+        System.out.println("\n**********  Récapitulatif de la liste de préférence de chaque colon  **********");
         for(Colon c : colons){
             System.out.print("        " + c.getNom() + " : ");
             for(Ressource r : c.getPreferencesRessources()){

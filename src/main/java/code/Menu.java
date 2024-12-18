@@ -1,6 +1,6 @@
 package code;
 
-import code.exception.*;
+import exception.*;
 import java.util.InputMismatchException;
 
 /**
@@ -165,14 +165,13 @@ public class Menu {
                 colonie.getSc().nextLine();
                 switch(choix){
                     case 1:
-                        System.out.println("Affectation des ressources de colonie :");
-                        int k = 7;
+                        System.out.println("Entrez le nombre d'itérations que vous souhaitez pour l'algorithme approximatif (Recuit Simulé) : ");
+                        int k = colonie.getSc().nextInt();
                         try{
                             Algo.RecuitSimule(colonie,k);
                         }catch(Exception e){
                             System.err.println(e.getClass().getName()+ "\n" + e.getMessage());
                         }
-                        colonie.afficherJaloux();
                         break;
 
                     case 2 :

@@ -1,9 +1,11 @@
 package code;
 
-import code.exception.*;
+import exception.*;
 
 import java.io.*;
 import java.util.StringTokenizer;
+
+import static code.Algo.calculAffectation;
 
 /**
  * Cette classe, contenant que des méthodes static, permet de gérer la partie fichier du programme
@@ -194,6 +196,8 @@ public class Fichier {
             throw new FichierException("ERREUR : Le fichier est identique au fichier de configuration.");
         }else{
             try(PrintWriter writer = new PrintWriter(chemin)){
+                calculAffectation(colonie);
+                writer.println("Cout="+colonie.getAffectation());
                 for(Colon colon : colonie.getColons()){
                     writer.println(colon.getNom() + ":" + colon.getRessource().getNomRessource());
                 }

@@ -1,6 +1,6 @@
 package code;
 
-import code.exception.*;
+import exception.*;
 
 
 import java.io.File;
@@ -32,24 +32,24 @@ public class Main {
         String nom = sc.nextLine();
         Colonie colonie = new Colonie(nom);
 
-        String cheminFichier = "src/main/fichierTXT/config.txt";
+        String cheminFichier = "src/main/fichierTXT/equipage1";
 
         try{
             Fichier.init2(cheminFichier, colonie);
             Menu.menuSolutionAuto(colonie);
 
         } catch(ParamException |
-               SyntaxeException |
-               ColonDejaDansColonieException |
-               RessourceDejaDansColonieException |
-               MemeColonException |
-               ColonNonPresentDansColonieException |
-               ColonDejaDansLaRelationException |
-               RessourceManquanteException |
-               RessourceDoubleException |
-               RessourcePasDansColonieException |
-               NbrColonPasEgaleNbrRessourceException |
-               EnsembleListPreferenceColonieIncompleteException e)
+                SyntaxeException |
+                ColonDejaDansColonieException |
+                RessourceDejaDansColonieException |
+                MemeColonException |
+                ColonNonPresentDansColonieException |
+                ColonDejaDansLaRelationException |
+                RessourceManquanteException |
+                RessourceDoubleException |
+                RessourcePasDansColonieException |
+                NbrColonPasEgaleNbrRessourceException |
+                EnsembleListPreferenceColonieIncompleteException e)
         {
             System.out.println(e.getClass().getName()+ "\n" + e.getMessage());
 

@@ -237,7 +237,6 @@ deteste(C20,C74).
 deteste(C21,C59).
 deteste(C21,C8).
 deteste(C21,C24).
-deteste(C22,C9).
 deteste(C22,C63).
 deteste(C22,C57).
 deteste(C23,C1).
