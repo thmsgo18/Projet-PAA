@@ -4,7 +4,7 @@
 
 ### Option 1 : Utilisation du Makefile
 
-Utilisation du `Makefile`. Voici les commandes disponibles :
+Voici les commandes disponibles :
 
 - **Compilation** :  
   ```bash
@@ -18,7 +18,9 @@ Utilisation du `Makefile`. Voici les commandes disponibles :
   ```bash
   make clear
 
-Utilisation du terminal. Voici les commandes disponibles :
+### Option 2 : Utilisation du terminal
+
+Voici les commandes disponibles :
 
 - **Compilation** :  
   ```bash
