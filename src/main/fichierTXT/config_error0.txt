@@ -1,4 +1,4 @@
-colo(A).
+colon(A).
 colon(B).
 colon(C).
 colon(D).
