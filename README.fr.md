@@ -184,12 +184,4 @@ make clear         # Nettoyer les fichiers compilés
 
 ## Auteur
 
-- **thmsgo18** - [Profil GitHub](https://github.com/thmsgo18)
-
-## Contexte Académique
-
-Ce projet a été développé dans le cadre du cours d'Algorithmique Avancée (PAA - Projet d'Algorithmique Avancée) durant la troisième année de Licence (L3 S1).
-
-## Licence
-
-Ce projet est un travail académique. Veuillez vous référer aux politiques d'intégrité académique de votre institution concernant la réutilisation de code.
+[thmsgo18](https://github.com/thmsgo18)

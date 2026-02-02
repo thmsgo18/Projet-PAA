@@ -184,13 +184,4 @@ make clear         # Clean compiled files
 
 ## Author
 
-- **thmsgo18** - [GitHub Profile](https://github.com/thmsgo18)
-
-## Academic Context
-
-This project was developed as part of the Advanced Algorithmics course (PAA - Projet d'Algorithmique Avancée) during the third year of Bachelor's degree (L3 S1).
-
-## License
-
-This project is an academic work. Please refer to your institution's academic integrity policies regarding code reuse.
-  
+[thmsgo18](https://github.com/thmsgo18)
